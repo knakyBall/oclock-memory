@@ -1,0 +1,37 @@
+<?php
+$fruits = [
+    'red-apple',
+    'banana',
+    'peach',
+    'green-lemon',
+    'pomegranate',
+    'apricot',
+    'yellow-lemon',
+    'strawberry',
+    'green-apple',
+    'nectarine',
+    'green-grape',
+    'watermelon',
+    'purple-plum',
+    'pear',
+    'red-cherry',
+    'red-grape',
+    'mango',
+    'yellow-cherry'
+];
+
+$randomFruits = array_merge($fruits, $fruits);
+shuffle($randomFruits);
+
+?>
+
+<div class="center-container">
+    <div class="cards-container">
+
+        <?php foreach($randomFruits as $fruit): ?>
+        <div class="fruit-card">
+            <div class="fruit-card-image fruit <?= $fruit ?>"></div>
+        </div>
+        <?php endforeach; ?>
+    </div>
+</div>

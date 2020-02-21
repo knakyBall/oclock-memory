@@ -1,0 +1,101 @@
+.fruit-card {
+  padding: 10px;
+  height: 100px;
+  width: 100px;
+  display: flex;
+  background-color: #ffffff;
+  margin: 5px;
+  cursor: pointer;
+
+  border-radius: 3px 3px 3px 3px;
+  -moz-border-radius: 3px 3px 3px 3px;
+  -webkit-border-radius: 3px 3px 3px 3px;
+
+  -webkit-box-shadow: 4px 2px 21px 0px rgba(0, 0, 0, 0.33);
+  -moz-box-shadow: 4px 2px 21px 0px rgba(0, 0, 0, 0.33);
+  box-shadow: 4px 2px 21px 0px rgba(0, 0, 0, 0.33);
+
+  .fruit-card-image {
+    display: flex;
+    flex: 1;
+
+    &.fruit {
+      background: url(/img/cards.png);
+      background-position-x: center;
+    }
+
+    &.red-apple {
+      background-position-y: -10px;
+    }
+
+    &.banana {
+      background-position-y: -110px;
+    }
+
+    &.peach {
+      background-position-y: -210px;
+    }
+
+    &.green-lemon {
+      background-position-y: -310px;
+    }
+
+    &.pomegranate {
+      background-position-y: -410px;
+    }
+
+    &.apricot {
+      background-position-y: -510px;
+    }
+
+    &.yellow-lemon {
+      background-position-y: -610px;
+    }
+
+    &.strawberry {
+      background-position-y: -710px;
+    }
+
+    &.green-apple {
+      background-position-y: -810px;
+    }
+
+    &.nectarine {
+      background-position-y: -910px;
+    }
+
+    &.green-grape {
+      background-position-y: -1010px;
+    }
+
+    &.watermelon {
+      background-position-y: -1110px;
+    }
+
+    &.purple-plum {
+      background-position-y: -1210px;
+    }
+
+    &.pear {
+      background-position-y: -1310px;
+    }
+
+    &.red-cherry {
+      background-position-y: -1410px;
+    }
+
+    &.red-grape {
+      background-position-y: -1510px;
+    }
+
+    &.mango {
+      background-position-y: -1610px;
+    }
+
+    &.yellow-cherry {
+      background-position-y: -1710px;
+    }
+  }
+}
+
+

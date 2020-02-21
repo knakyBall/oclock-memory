@@ -1,0 +1,29 @@
+//Gestion du body pour l'avoir en fullscreen
+html, body {
+  margin: 0;
+  height: 100%;
+  display: flex;
+  background-color: #000000;
+  flex-direction: column;
+}
+
+//Container du layout
+.main-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  background: no-repeat center url("/img/backgroundTable.jpg");
+  background-size: 100% 100%;
+}
+
+//Conteneur des cards
+.cards-container {
+  width: 750px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}

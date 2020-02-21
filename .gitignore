@@ -1,0 +1,12 @@
+.vagrant/
+vendor/
+config/development.config.php
+data/cache/*
+!data/cache/.gitkeep
+phpunit.xml
+composer.lock
+.phpunit.result.cache
+.idea
+public/css/style.css
+public/css/bootstrap/bootstrap.css
+node_modules
