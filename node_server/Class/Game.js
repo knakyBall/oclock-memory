@@ -58,7 +58,7 @@ Game.prototype.revealCard = function(card_index) {
 Game.prototype.start = function() {
     logger.debug('[GAME]', `Démarrage du jeu`);
     this.started = true;
-    this.finished = true;
+    this.finished = false;
     this.generateNewGameConfiguration();
     setTimeout(this.finish, config.game_duration)
 };
