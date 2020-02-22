@@ -1,6 +1,6 @@
 const logger = require('./config/logger');
 const io = require("socket.io"),
-    server = io.listen(8123);
+    server = io.listen(8081);
 
 const sequelize = require('./config/sequelize');
 const ScoreModel = require('./Model/Score');

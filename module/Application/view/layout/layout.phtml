@@ -33,7 +33,7 @@
             <?= $this->content ?>
         </div>
        <script type="text/javascript">
-           startSocketIOClient(`${document.location.protocol}//${document.location.hostname}:8123`, '<?= $this->url('play', [], ['force_canonical' => true]) ?>');
+           startSocketIOClient(`${document.location.protocol}//${document.location.hostname}:8081`, '<?= $this->url('play', [], ['force_canonical' => true]) ?>');
        </script>
     </body>
 </html>
