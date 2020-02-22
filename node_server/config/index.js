@@ -20,6 +20,14 @@ module.exports = {
         'mango',
         'yellow-cherry'
     ],
-    game_duration: 60 * 1000,
-    revelation_duration: 2 * 1000
+    game_duration: 120 * 1000,
+    revelation_duration: 1000,
+    nbCardMaxDefault: 36,
+
+    mysql: {
+        host: 'localhost',
+        database: 'memory',
+        username: 'root',
+        password: ''
+    }
 };

@@ -1,8 +1,7 @@
 let socket = null;
 
-
 //Instantiation du socket
-const startSocketIOClient = (url) => {
+const startSocketIOClient = (url, play_url) => {
     socket = io(url, {
         query: {
             session_id: getCookie('PHPSESSID')
@@ -15,6 +14,10 @@ const startSocketIOClient = (url) => {
         console.error(`Server error [CODE][${error_code}]`);
     });
     jQuery(document).trigger('socketReady');
+
+    socket.on('newGameStarted', () => {
+        document.location.href = play_url;
+    });
 };
 
 //Création d'une fonction d'emit au cas où on veuille toutes les surcharger d'un coups
@@ -23,11 +26,6 @@ const socketEmit = (event_name, event_args, event_feedback) => {
 };
 
 //Démarre une nouvelle partie et redirige vers la page /play
-const startNewGame = (callback_url) => {
-    socketEmit('createNewGame', {}, (data) => {
-        if (data.success) {
-            document.location.href = callback_url;
-        }
-        else console.error(data);
-    })
+const startNewGame = () => {
+    socketEmit('createNewGame');
 };

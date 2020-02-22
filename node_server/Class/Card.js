@@ -8,7 +8,7 @@ function Card(fruit) {
     else if (fruit === null){
         this.fruit = config.available_fruits[Math.floor(Math.random() * config.available_fruits.length)];
     }
-    else throw new Error(`Ce fruit n'est pas disponible`);
+    else throw new Error(`Le fruit ${fruit} fruit n'est pas disponible`);
 
     this.revealed = false;
 }
@@ -20,7 +20,12 @@ Card.prototype.getFruit = function (){
 
 //Récupère le fruit de la carte
 Card.prototype.setRevealState = function (revealed){
-    return this.revealed = revealed;
+    this.revealed = revealed;
+};
+
+//Récupère l'état de visibilité de la carte
+Card.prototype.isRevealed = function (revealed){
+    return this.revealed
 };
 
 //Récupère le fruit de la carte

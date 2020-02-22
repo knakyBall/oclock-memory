@@ -2,6 +2,18 @@ const logger = require('./config/logger');
 const io = require("socket.io"),
     server = io.listen(8123);
 
+const sequelize = require('./config/sequelize');
+const ScoreModel = require('./Model/Score');
+
+sequelize
+    .authenticate()
+    .then(() => {
+        logger.info('Connexion à la base de données OK');
+    })
+    .catch(err => {
+        logger.error("Erreur de connexion à la base de données", err);
+    });
+
 //Require des différentes classes
 const Player = require('./Class/Player');
 const Game = require('./Class/Game');
@@ -67,22 +79,24 @@ server.on("connection", (socket) => {
 
 const bindSocketEvents = function (socket) {
     //Demande de création d'une nouvelle partie
-    socket.on('createNewGame', (args, cb) => {
-        gamesList[socket.player.getSessionID()] = new Game(server, socket.player);
+    socket.on('createNewGame', (args) => {
+        if (gamesList[socket.player.getSessionID()] === undefined || (gamesList[socket.player.getSessionID()] && gamesList[socket.player.getSessionID()].isFinished())) {
+            gamesList[socket.player.getSessionID()] = new Game(server, socket.player, 18);
+        }
         socket.player.setPlayingGame(gamesList[socket.player.getSessionID()]);
         gamesList[socket.player.getSessionID()].start();
-        cb({
-            success: true
-        });
     });
 
     //Demande de révéler une carte
-    socket.on('revealCard', (args) => {
+    socket.on('compareCard', (args) => {
+        if (gamesList[socket.player.getSessionID()] && gamesList[socket.player.getSessionID()].isFinished()){
+            return false;
+        }
         if (args.card_index === undefined){
             throw new Error(`Cet index de carte n'existe pas`);
         }
-        logger.verbose(`[connection]`, `Révélation de la carte ${args.card_index}`);
-        gamesList[socket.player.getSessionID()].revealCard(args.card_index);
+        logger.verbose(`[connection]`, `Comparaison de la carte ${args.card_index}`);
+        gamesList[socket.player.getSessionID()].compareCard(args.card_index);
     });
 
     //Demande de suppression de la partie du joueur
@@ -93,6 +107,60 @@ const bindSocketEvents = function (socket) {
         cb({
             success: true
         });
+    });
+
+    socket.on('getScoreBoard', (args, cb) => {
+        if (typeof cb !== "function"){
+            logger.error('[getScoreBoard]', `Cette fonction ne possède pas de callback `)
+            return false;
+        }
+        ScoreModel.findAll({
+            order: sequelize.literal('TIMEDIFF(finished_at, started_at) ASC'),
+            limit: 5
+        }).then((result) => {
+            return cb({
+                success: true,
+                result
+            });
+        }).catch((e) => {
+            logger.error('[getScoreBoard]', e);
+            return cb({
+                success: false,
+                message: e.message
+            })
+        })
+    });
+    //Demande d'enregistrement du score utilisateur
+    socket.on('saveGameScore', (args, cb) => {
+        if (!args.pseudo){
+            return cb({
+                success: false,
+                message: "Le pseudo n'est pas correct"
+            });
+        }
+        else if (!gamesList[socket.player.getSessionID()]){
+            return cb({
+                success: false,
+                message: "Aucune session de jeu en cours"
+            });
+        }
+        else if (!gamesList[socket.player.getSessionID()].isFinished()){
+            return cb({
+                success: false,
+                message: "La session de jeu n'est pas terminée"
+            });
+        }
+        gamesList[socket.player.getSessionID()].saveScore(args.pseudo).then(() => {
+            return cb({
+                success: true
+            });
+        }).catch((e) => {
+            return cb({
+                success: false,
+                message: e.message
+            });
+        })
+
     });
 
     //Récupére la configuration du jeu

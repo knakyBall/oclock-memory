@@ -32,7 +32,7 @@ Player.prototype.getSessionID = function (){
 Player.prototype.setSocket = function (socket){
     this.socket = socket;
     this.socket_id = socket.id;
-
+    this.socket.join(this.getSessionID());
     if (this.getPlayingGame()){
         this.socket.join(this.getPlayingGame().getCreator().getSessionID());
     }
