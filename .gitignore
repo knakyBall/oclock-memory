@@ -10,3 +10,4 @@ composer.lock
 node_modules
 public/components/*
 !public/components/.gitkeep
+node_server/config/index.js
