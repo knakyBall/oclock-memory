@@ -11,12 +11,22 @@ declare(strict_types=1);
 namespace Application\Controller;
 
 use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Session\Container;
 use Laminas\View\Model\ViewModel;
 
 class IndexController extends AbstractActionController
 {
     public function indexAction()
     {
+        //Utilisé pour générer un "session_id"
+        $container = new Container('initialized');
+        return new ViewModel();
+    }
+
+    public function playAction()
+    {
+        //Utilisé pour générer un "session_id"
+        $container = new Container('initialized');
         return new ViewModel();
     }
 }

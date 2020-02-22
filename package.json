@@ -2,14 +2,18 @@
   "name": "sass",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "node_server/index.js",
   "scripts": {
+    "start": "node node_server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "scss": "node-sass -w \"./public/scss\" -o \"./public/css\" --source-map true --output-style compressed"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "node-sass": "^4.13.1"
+    "moment": "^2.24.0",
+    "node-sass": "^4.13.1",
+    "socket.io": "^2.3.0",
+    "winston": "^3.2.1"
   }
 }

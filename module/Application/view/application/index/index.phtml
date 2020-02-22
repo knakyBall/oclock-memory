@@ -1,37 +1,16 @@
-<?php
-$fruits = [
-    'red-apple',
-    'banana',
-    'peach',
-    'green-lemon',
-    'pomegranate',
-    'apricot',
-    'yellow-lemon',
-    'strawberry',
-    'green-apple',
-    'nectarine',
-    'green-grape',
-    'watermelon',
-    'purple-plum',
-    'pear',
-    'red-cherry',
-    'red-grape',
-    'mango',
-    'yellow-cherry'
-];
-
-$randomFruits = array_merge($fruits, $fruits);
-shuffle($randomFruits);
-
-?>
-
-<div class="center-container">
-    <div class="cards-container">
-
-        <?php foreach($randomFruits as $fruit): ?>
-        <div class="fruit-card">
-            <div class="fruit-card-image fruit <?= $fruit ?>"></div>
+<div id="mainTitle-wrapper">
+    <div id="mainTitle-container">
+        <div class="row">
         </div>
-        <?php endforeach; ?>
+        <div class="row">
+            <div class="col-12">
+                <h1>
+                    CARD<br/>
+                    MEM<img src="<?= $this->basePath('img/oclock.png') ?>" style="height: 60px;margin-bottom: 15px;" />RY<br/>
+                    Match
+                </h1>
+                <button type="button" class="btn btn-primary mt-5" onclick="startNewGame('<?= $this->url('play', [], ['force_canonical' => true]) ?>')">Démarer une nouvelle partie</button>
+            </div>
+        </div>
     </div>
 </div>

@@ -1,4 +1,6 @@
 //Gestion du body pour l'avoir en fullscreen
+@import url(https://fonts.googleapis.com/css?family=Raleway:400,700,900,400italic,700italic,900italic);
+
 html, body {
   margin: 0;
   height: 100%;
@@ -7,6 +9,10 @@ html, body {
   flex-direction: column;
 }
 
+body {
+  font: 16px/1.25 'Raleway', sans-serif;
+  text-align: center;
+}
 //Container du layout
 .main-container {
   flex: 1;

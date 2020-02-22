@@ -27,13 +27,13 @@ return [
                     ],
                 ],
             ],
-            'application' => [
+            'play' => [
                 'type'    => Segment::class,
                 'options' => [
-                    'route'    => '/application[/:action]',
+                    'route'    => '/play',
                     'defaults' => [
                         'controller' => Controller\IndexController::class,
-                        'action'     => 'index',
+                        'action'     => 'play',
                     ],
                 ],
             ],

@@ -1,5 +1,5 @@
 <?= $this->doctype() ?>
-<html lang="en">
+<html lang="fr">
     <head>
         <meta charset="utf-8">
         <?= $this->headTitle('Laminas MVC Skeleton')->setSeparator(' - ')->setAutoEscape(false) ?>
@@ -17,8 +17,11 @@
 
         <!-- Scripts -->
         <?= $this->inlineScript()
+            ->prependFile($this->basePath('js/client.js'))
+            ->prependFile($this->basePath('js/utils.js'))
             ->prependFile($this->basePath('js/bootstrap.bundle.min.js'))
-            ->prependFile($this->basePath('js/jquery-3.4.1.min.js'))
+            ->prependFile($this->basePath('components/socket.io-client/dist/socket.io.js'))
+            ->prependFile($this->basePath('components/jquery/dist/jquery.min.js'))
         ?>
     </head>
     <body>
@@ -28,6 +31,8 @@
         <div class="main-container">
             <?= $this->content ?>
         </div>
-        <?= $this->inlineScript() ?>
+       <script type="text/javascript">
+           startSocketIOClient(`${document.location.protocol}//${document.location.hostname}:8123`);
+       </script>
     </body>
 </html>
