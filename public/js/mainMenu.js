@@ -21,8 +21,7 @@
 
                 html += `<div class="aScore">
                             <div class="position">${index + 1}</div>
-                            <div class="pseudo">${aResult.pseudo.replace(/[\u00A0-\u9999<>\&]/gim, (i) => {return '&#'+i.charCodeAt(0)+';';
-                })}</div>
+                            <div class="pseudo">${aResult.pseudo.replace(/[\u00A0-\u9999<>\&]/gim, (i) => {return '&#'+i.charCodeAt(0)+';';})}</div>
                             <div class="time">${duration.format('mm:ss')}</div>
 <!--                            <div class="nb_cards">${aResult.nb_cards}</div>-->
 <!--                            <div class="nb_try">${aResult.nb_try}</div>-->

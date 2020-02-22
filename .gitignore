@@ -7,8 +7,6 @@ phpunit.xml
 composer.lock
 .phpunit.result.cache
 .idea
-public/css/style.css
-public/css/bootstrap/bootstrap.css
 node_modules
 public/components/*
 !public/components/.gitkeep
