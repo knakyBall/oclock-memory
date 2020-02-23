@@ -81,7 +81,7 @@ const bindSocketEvents = function (socket) {
     //Demande de création d'une nouvelle partie
     socket.on('createNewGame', (args) => {
         if (gamesList[socket.player.getSessionID()] === undefined || (gamesList[socket.player.getSessionID()] && gamesList[socket.player.getSessionID()].isFinished())) {
-            gamesList[socket.player.getSessionID()] = new Game(server, socket.player, 18);
+            gamesList[socket.player.getSessionID()] = new Game(server, socket.player);
         }
         socket.player.setPlayingGame(gamesList[socket.player.getSessionID()]);
         gamesList[socket.player.getSessionID()].start();

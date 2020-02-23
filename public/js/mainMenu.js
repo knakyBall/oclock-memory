@@ -15,7 +15,7 @@
 <!--                            <div class="nb_try">Nb. Opérations</div>-->
                         </div>`;
             scoreboard.result.map((aResult, index) => {
-                const diff = moment(aResult.finished_at).diff(moment(aResult.started_at));
+                const diff = moment(aResult.finished_at, 'HH:mm:ss').diff(moment(aResult.started_at, 'HH:mm:ss'));
                 const duration = moment.utc(diff);
 
                 html += `<div class="aScore">

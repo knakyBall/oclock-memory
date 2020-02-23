@@ -9,11 +9,11 @@ Score.init({
         allowNull: false
     },
     started_at: {
-        type: Sequelize.DATE,
+        type: Sequelize.TIME,
         allowNull: false
     },
     finished_at: {
-        type: Sequelize.DATE,
+        type: Sequelize.TIME,
         allowNull: false
     },
     nb_cards: {

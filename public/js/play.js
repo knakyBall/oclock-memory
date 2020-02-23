@@ -45,7 +45,6 @@
                 //On supprime la classe la classe de fruit correspondant précédemment stockée dans les data de l'élément
                 const card_element = jQuery(`.cards-container .fruit-card[data-index=${card_index}]`);
                 //et on ajoute à la place la classe backed
-                console.log("card_element.data('fruit')", card_element.data('fruit'));
                 card_element.find('.fruit-card-image')
                     .removeClass(card_element.data('fruit'))
                     .addClass('backed');
@@ -77,7 +76,6 @@
 
     const setCurrentConfiguration = (config) => {
         initialized = true;
-        console.log("setCurrentConfiguration");
         gameConfig = config;
         if (config === null) {
             document.location.href = '/';
@@ -143,8 +141,8 @@
                 clearInterval(progressBarInterval);
                 progressBarInterval = null;
             }
-            const diff = moment(config.finished_at).diff(moment(config.started_at));
-            const duration = moment.utc(Math.round(diff/1000) * 1000);
+            const diff = moment(config.finished_at, 'HH:mm:ss').diff(moment(config.started_at, 'HH:mm:ss'))/1000;
+            const duration = moment.utc(Math.round(diff) * 1000);
 
             const totalTime = moment(config.started_at).add(config.game_duration, 'milliseconds').diff(moment(config.started_at));
             const remainingTime = moment(config.finished_at).diff(moment(config.started_at));
@@ -170,7 +168,7 @@
                     <h2>
                         Félicitations tu as fini avec un score de 
                         <span class="highlight">${duration.format('m')} min</span> et 
-                        <span class="highlight">${Math.round(parseFloat(parseInt(duration.format('s'))+'.'+parseInt(duration.format('SS'))))} sec</span>
+                        <span class="highlight">${duration.format('s')} sec</span>
                     </h2>
                     <div class="interactionDiv">
                         <button type="button" class="btn btn-primary mt-5" onclick="saveMyScore()">Enregistrer mon score</button>

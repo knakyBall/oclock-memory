@@ -224,8 +224,8 @@ Game.prototype.saveScore = function (pseudo) {
     return ScoreModel
         .create({
             pseudo,
-            started_at: this.started_at,
-            finished_at: this.finished_at,
+            started_at: this.started_at.format('HH:mm:ss'),
+            finished_at: this.finished_at.format('HH:mm:ss'),
             nb_cards: this.nbCardMax,
             nb_try: 0 //TODO
         }).then((result) => {
