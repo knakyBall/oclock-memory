@@ -2,7 +2,6 @@
     //A partir du moment qu'on est connecté à la socket, on peut commencer à échanger avec le serveur node
     jQuery(document).on('socketReady', () => {
         socket.emit('getScoreBoard', {}, (scoreboard) => {
-            console.log(scoreboard)
             const $scoreBoardContainer = jQuery('.scoreboard .scoreboard-container');
             if (!scoreboard.success) {
                 return $scoreBoardContainer.html(scoreboard.message);

@@ -144,8 +144,7 @@
                 progressBarInterval = null;
             }
             const diff = moment(config.finished_at).diff(moment(config.started_at));
-
-            const duration = moment.utc(diff);
+            const duration = moment.utc(Math.round(diff/1000) * 1000);
 
             const totalTime = moment(config.started_at).add(config.game_duration, 'milliseconds').diff(moment(config.started_at));
             const remainingTime = moment(config.finished_at).diff(moment(config.started_at));
@@ -171,7 +170,7 @@
                     <h2>
                         Félicitations tu as fini avec un score de 
                         <span class="highlight">${duration.format('m')} min</span> et 
-                        <span class="highlight">${duration.format('s')} sec</span>
+                        <span class="highlight">${Math.round(parseFloat(parseInt(duration.format('s'))+'.'+parseInt(duration.format('SS'))))} sec</span>
                     </h2>
                     <div class="interactionDiv">
                         <button type="button" class="btn btn-primary mt-5" onclick="saveMyScore()">Enregistrer mon score</button>
