@@ -24,7 +24,7 @@ Card.prototype.setRevealState = function (revealed){
 };
 
 //Récupère l'état de visibilité de la carte
-Card.prototype.isRevealed = function (revealed){
+Card.prototype.isRevealed = function (){
     return this.revealed
 };
 

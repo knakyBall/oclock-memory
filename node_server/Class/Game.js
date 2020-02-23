@@ -91,16 +91,15 @@ Game.prototype.compareCard = function (card_index) {
 
     //Si la carte existe bien
     if (this.cards[card_index]) {
-
+        //Si la carte est déja en train d'être comparée,
+        //Ou si la carte est déja découverte, on ne fait rien
+        if (this.comparing_cards.includes(card_index) || this.cards[card_index].isRevealed()) {
+            return false;
+        }
         //Suppression du timout de masquage des cartes si on affiche une autre carte
         if (compareCardTimeout) {
             clearTimeout(compareCardTimeout);
             compareCardTimeout = null;
-        }
-
-        //Si la carte est déja en train d'être comparée, on ne fait rien
-        if (this.comparing_cards.includes(card_index)) {
-            return false;
         }
         if (this.comparing_cards.length > 1) {
             //S'il y a déjà au moins 2 cartes dans le tableau de comparaison c'est qu'on essaie d'en comparer une de plus
