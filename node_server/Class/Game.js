@@ -185,7 +185,10 @@ Game.prototype.compareCard = function (card_index, player) {
                     let cardsToHide = [];
                     this.comparing_players_cards[player.getSessionID()].map((comparing_card_index) => {
                         this.players_cards[player.getSessionID()][comparing_card_index].setRevealState(false);
-                        cardsToHide.push({card_index: comparing_card_index})
+                        cardsToHide.push({
+                            player_session_id: player.getSessionID(),
+                            card_index: comparing_card_index
+                        })
                     });
                     this.io.to(this.creator.getSessionID()).emit('hideCards', cardsToHide);
                     this.comparing_players_cards[player.getSessionID()] = [];

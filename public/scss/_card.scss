@@ -1,113 +1,111 @@
-.fruit-scale {
-  .fruit-card {
-    padding: 10px;
-    height: 100px;
-    width: 100px;
+.fruit-card {
+  padding: 10px;
+  height: 100px;
+  width: 100px;
+  display: flex;
+  background-color: #ffffff;
+  margin: 5px;
+  cursor: pointer;
+
+  transform: scale(0.5);
+  border-radius: 3px 3px 3px 3px;
+  -moz-border-radius: 3px 3px 3px 3px;
+  -webkit-border-radius: 3px 3px 3px 3px;
+
+  -webkit-box-shadow: $box-shadow;
+  -moz-box-shadow: $box-shadow;
+  box-shadow: $box-shadow;
+
+  transition: all 0.3s ease-out;
+
+  .fruit-card-image {
     display: flex;
-    background-color: #ffffff;
-    margin: 5px;
-    cursor: pointer;
+    flex: 1;
 
-    transform: scale(0.5);
-    border-radius: 3px 3px 3px 3px;
-    -moz-border-radius: 3px 3px 3px 3px;
-    -webkit-border-radius: 3px 3px 3px 3px;
+    &.fruit {
+      background: url(/img/cards.png);
+      background-position-x: center;
+    }
 
-    -webkit-box-shadow: $box-shadow;
-    -moz-box-shadow: $box-shadow;
-    box-shadow: $box-shadow;
+    &.backed {
+      background: url(/img/oclock.png) no-repeat center !important;
+      background-size: contain !important;
+    }
 
-    transition: all 0.3s ease-out;
+    &.hire-me {
+      background-position-y: -10px;
+    }
 
-    .fruit-card-image {
-      display: flex;
-      flex: 1;
+    &.red-apple {
+      background-position-y: -110px;
+    }
 
-      &.fruit {
-        background: url(/img/cards.png);
-        background-position-x: center;
-      }
+    &.banana {
+      background-position-y: -210px;
+    }
 
-      &.backed {
-        background: url(/img/oclock.png) no-repeat center !important;
-        background-size: contain !important;
-      }
+    &.peach {
+      background-position-y: -310px;
+    }
 
-      &.hire-me {
-        background-position-y: -10px;
-      }
+    &.green-lemon {
+      background-position-y: -410px;
+    }
 
-      &.red-apple {
-        background-position-y: -110px;
-      }
+    &.pomegranate {
+      background-position-y: -510px;
+    }
 
-      &.banana {
-        background-position-y: -210px;
-      }
+    &.apricot {
+      background-position-y: -610px;
+    }
 
-      &.peach {
-        background-position-y: -310px;
-      }
+    &.yellow-lemon {
+      background-position-y: -710px;
+    }
 
-      &.green-lemon {
-        background-position-y: -410px;
-      }
+    &.strawberry {
+      background-position-y: -810px;
+    }
 
-      &.pomegranate {
-        background-position-y: -510px;
-      }
+    &.green-apple {
+      background-position-y: -910px;
+    }
 
-      &.apricot {
-        background-position-y: -610px;
-      }
+    &.nectarine {
+      background-position-y: -1010px;
+    }
 
-      &.yellow-lemon {
-        background-position-y: -710px;
-      }
+    &.green-grape {
+      background-position-y: -1110px;
+    }
 
-      &.strawberry {
-        background-position-y: -810px;
-      }
+    &.watermelon {
+      background-position-y: -1210px;
+    }
 
-      &.green-apple {
-        background-position-y: -910px;
-      }
+    &.purple-plum {
+      background-position-y: -1310px;
+    }
 
-      &.nectarine {
-        background-position-y: -1010px;
-      }
+    &.pear {
+      background-position-y: -1410px;
+    }
 
-      &.green-grape {
-        background-position-y: -1110px;
-      }
+    &.red-cherry {
+      background-position-y: -1510px;
+    }
 
-      &.watermelon {
-        background-position-y: -1210px;
-      }
+    &.red-grape {
+      background-position-y: -1610px;
+    }
 
-      &.purple-plum {
-        background-position-y: -1310px;
-      }
+    &.mango {
+      background-position-y: -1710px;
+    }
 
-      &.pear {
-        background-position-y: -1410px;
-      }
-
-      &.red-cherry {
-        background-position-y: -1510px;
-      }
-
-      &.red-grape {
-        background-position-y: -1610px;
-      }
-
-      &.mango {
-        background-position-y: -1710px;
-      }
-
-      &.yellow-cherry {
-        background-position-y: -1810px;
-      }
+    &.yellow-cherry {
+      background-position-y: -1810px;
     }
   }
 }

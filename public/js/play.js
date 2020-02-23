@@ -35,8 +35,6 @@
                     .removeClass('backed')
                     .addClass(card.fruit);
                 card_element.data('fruit', card.fruit);
-
-                // console.log("card_element.data", card_element.data());
             });
         });
 
@@ -66,10 +64,8 @@
         let html = '';
         cards_config.map((fruit_object, card_index) => {
             html += `
-                 <div class="fruit-scale">
-                     <div class="fruit-card" data-index="${card_index}">
-                        <div class="fruit-card-image fruit ${fruit_object.fruit}"></div>
-                     </div>
+                 <div class="fruit-card" data-index="${card_index}">
+                    <div class="fruit-card-image fruit ${fruit_object.fruit}"></div>
                  </div>`;
         });
         if (html === "") {
@@ -106,6 +102,7 @@
                                     </div>
                                 </div>`;
         });
+
         jQuery('.game-container').html(playersCardsHTML);
 
         setTimeout(() => {
@@ -120,6 +117,7 @@
         //Gestion du clic sur une carte, uniquement pour le joueur présent
         jQuery('.player-workspace[data-player="' + session_id + '"] .cards-container .fruit-card').on('click', function () {
             if (gameConfig.finished) return false;
+            if (!jQuery(this).find('.fruit-card-image').hasClass('backed')) return false;
             //Ici on va demander au serveur node quel est la carte qu'on vient de sélectionner
             let card_index = jQuery(this).data('index');
             socketEmit('compareCard', {card_index});
