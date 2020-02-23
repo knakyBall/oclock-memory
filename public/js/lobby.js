@@ -56,7 +56,6 @@ const initLobby = lobby_slug => {
 
 
         const refreshUI = (config) => {
-            console.log("refreshUI", config);
             //Génération du code HTML du créateur
             let creatorHTML = `
             <div class="creator-row">

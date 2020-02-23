@@ -86,8 +86,6 @@
             document.location.href = '/';
             throw new Error('Aucun jeu en cours');
         }
-
-        console.log("config", config);
         //Génération des cartes en HTML en fonction de la configuration de la session de jeu envoyée depuis le serveur socket
         let playersCardsHTML = ``;
 
