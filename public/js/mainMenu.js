@@ -11,8 +11,6 @@
                             <div class="position">#</div>
                             <div class="pseudo">Pseudo</div>
                             <div class="time">Temps</div>
-<!--                            <div class="nb_cards">Nb. Cartes</div>-->
-<!--                            <div class="nb_try">Nb. Opérations</div>-->
                         </div>`;
             scoreboard.result.map((aResult, index) => {
                 const diff = moment(aResult.finished_at, 'HH:mm:ss').diff(moment(aResult.started_at, 'HH:mm:ss'));
@@ -22,8 +20,6 @@
                             <div class="position">${index + 1}</div>
                             <div class="pseudo">${aResult.pseudo.replace(/[\u00A0-\u9999<>\&]/gim, (i) => {return '&#'+i.charCodeAt(0)+';';})}</div>
                             <div class="time">${duration.format('mm:ss')}</div>
-<!--                            <div class="nb_cards">${aResult.nb_cards}</div>-->
-<!--                            <div class="nb_try">${aResult.nb_try}</div>-->
                         </div>`;
             });
             $scoreBoardContainer.html(html);

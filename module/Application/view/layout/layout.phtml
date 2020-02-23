@@ -1,39 +1,39 @@
 <?= $this->doctype() ?>
 <html lang="fr">
-    <head>
-        <meta charset="utf-8">
-        <?= $this->headTitle('Memory Test - O\'Clock')->setSeparator(' - ')->setAutoEscape(false) ?>
+<head>
+    <meta charset="utf-8">
+    <?= $this->headTitle('Memory Test - O\'Clock')->setSeparator(' - ')->setAutoEscape(false) ?>
 
-        <?= $this->headMeta()
-            ->appendName('viewport', 'width=device-width, initial-scale=1.0')
-            ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
-        ?>
+    <?= $this->headMeta()
+        ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+        ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+    ?>
 
-        <!-- Le styles -->
-        <?= $this->headLink(['rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/oclock.png'])
-            ->prependStylesheet($this->basePath('css/style.css'))
-            ->prependStylesheet($this->basePath('css/bootstrap/bootstrap.css'))
-        ?>
+    <!-- Le styles -->
+    <?= $this->headLink(['rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/oclock.png'])
+        ->prependStylesheet($this->basePath('css/style.css'))
+        ->prependStylesheet($this->basePath('css/bootstrap/bootstrap.css'))
+    ?>
 
-        <!-- Scripts -->
-        <?= $this->inlineScript()
-            ->prependFile($this->basePath('js/client.js'))
-            ->prependFile($this->basePath('js/utils.js'))
-            ->prependFile($this->basePath('js/bootstrap.bundle.min.js'))
-            ->prependFile($this->basePath('components/socket.io-client/dist/socket.io.js'))
-            ->prependFile($this->basePath('components/moment/min/moment-with-locales.js'))
-            ->prependFile($this->basePath('components/jquery/dist/jquery.min.js'))
-        ?>
-    </head>
-    <body>
-       <!-- <a class="navbar-brand" href="<?/*= $this->url('home') */?>">
-            <img src="<?/*= $this->basePath('img/laminas-logo.svg') */?>" height="28" alt="Laminas MVC Skeleton"/>&nbsp;Laminas MVC Skeleton
+    <!-- Scripts -->
+    <?= $this->inlineScript()
+        ->prependFile($this->basePath('js/client.js'))
+        ->prependFile($this->basePath('js/utils.js'))
+        ->prependFile($this->basePath('js/bootstrap.bundle.min.js'))
+        ->prependFile($this->basePath('components/socket.io-client/dist/socket.io.js'))
+        ->prependFile($this->basePath('components/moment/min/moment-with-locales.js'))
+        ->prependFile($this->basePath('components/jquery/dist/jquery.min.js'))
+    ?>
+</head>
+<body>
+<!-- <a class="navbar-brand" href="<? /*= $this->url('home') */ ?>">
+            <img src="<? /*= $this->basePath('img/laminas-logo.svg') */ ?>" height="28" alt="Laminas MVC Skeleton"/>&nbsp;Laminas MVC Skeleton
         </a>-->
-        <div class="main-container">
-            <?= $this->content ?>
-        </div>
-       <script type="text/javascript">
-           startSocketIOClient(`${document.location.protocol}//${document.location.hostname}:8081`, '<?= $this->url('play', [], ['force_canonical' => true]) ?>');
-       </script>
-    </body>
+<div class="main-container">
+    <?= $this->content ?>
+</div>
+<script type="text/javascript">
+    startSocketIOClient(`${document.location.protocol}//${document.location.hostname}:8081`, '<?= $this->url('lobby', ['lobby_slug' => 'lobbyslug'], ['force_canonical' => true]) ?>', '<?= $this->url('play', [], ['force_canonical' => true]) ?>');
+</script>
+</body>
 </html>

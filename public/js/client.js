@@ -1,7 +1,7 @@
 let socket = null;
 
 //Instantiation du socket
-const startSocketIOClient = (url, play_url) => {
+const startSocketIOClient = (url, lobby_url, play_url) => {
     socket = io(url, {
         query: {
             session_id: getCookie('PHPSESSID')
@@ -14,6 +14,10 @@ const startSocketIOClient = (url, play_url) => {
         console.error(`Server error [CODE][${error_code}]`);
     });
     jQuery(document).trigger('socketReady');
+
+    socket.on('goToLobby', ({lobby_slug}) => {
+        document.location.href = lobby_url.replace('lobbyslug', lobby_slug);
+    });
 
     socket.on('newGameStarted', () => {
         document.location.href = play_url;

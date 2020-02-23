@@ -1,0 +1,16 @@
+<div id="mainTitle-wrapper">
+    <div id="mainTitle-container">
+        <h1>
+            L<img src="<?= $this->basePath('img/oclock.png') ?>" style="height: 60px;margin-bottom: 15px;"/>BBY
+        </h1>
+        <div class="middle-container">
+            <div class="lobby-playerlist"></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    initLobby('<?= $this->lobbySlug ?>')
+</script>
+
+<?php $this->inlineScript()->prependFile($this->basePath('js/lobby.js')) ?>

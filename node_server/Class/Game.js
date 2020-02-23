@@ -36,18 +36,29 @@ function Game(io, creator, nbCardMax = config.nbCardMaxDefault) {
 util.inherits(Game, EventEmitter);
 
 Game.prototype.getGameConfig = function () {
+    const playersConfig = {};
+    Object.keys(this.players).map((playerSessionID) => {
+        playersConfig[playerSessionID] = this.players[playerSessionID].toObject();
+    });
+
     return {
         finished_at: this.finished_at,
         started_at: this.started_at,
         score_saved: this.score_saved,
         cards: this.cards,
         time_reached: this.time_reached,
-        game_duration: config.game_duration
+        game_duration: config.game_duration,
+        players: playersConfig,
+        creator: this.creator.toObject(),
     };
 }
+Game.prototype.goToLobby = function (player) {
+    player.getSocket().emit('goToLobby', {lobby_slug: this.creator.getSessionID()});
+};
+
 Game.prototype.setCreator = function (creator) {
     this.creator = creator;
-}
+};
 
 //Génère une nouvelle configuration de jeu
 Game.prototype.generateNewGameConfiguration = function () {
@@ -73,6 +84,9 @@ Game.prototype.generateNewGameConfiguration = function () {
 
 //Récupère la configuration actuelle du jeu
 Game.prototype.getCurrentConfiguration = function () {
+    if (!this.isStarted()){
+        return this.getGameConfig();
+    }
     logger.debug('[GAME]', `Envoi de la configuration du jeu`);
     let cards = this.cards;
     cards = cards.map((card) => {
@@ -237,10 +251,12 @@ Game.prototype.saveScore = function (pseudo) {
         });
 };
 
-//Le jeu touche à sa fin suite au fait que toutes les paires soient trouvée
-//ou que le timer ai pris fin
 Game.prototype.isFinished = function () {
     return this.finished_at !== null;
+};
+
+Game.prototype.isStarted = function () {
+    return this.started_at !== null;
 };
 
 /*************************************/
@@ -252,16 +268,31 @@ Game.prototype.addPlayer = function (player) {
     if (this.started_at) {
         return false;
     }
+    if(player.getSessionID() === this.creator.getSessionID()){
+        throw new Error("Impossible d'ajouter ce joueur, c'est déja le créateur de la partie");
+    }
     this.players[player.getSessionID()] = player;
     this.players[player.getSessionID()].getSocket().join(this.creator.getSessionID());
+    this.io.to(this.creator.getSessionID()).emit('playerHasJoined', player.toObject());
+    this.io.to(this.creator.getSessionID()).emit('setGameConfiguration', this.getCurrentConfiguration());
 };
 //Supprime un joueur du tableau
 Game.prototype.removePlayer = function (player) {
-    if (this.started_at) {
+    if (!this.players[player.getSessionID()] || this.started_at) {
         return false;
     }
     this.players[player.getSessionID()].getSocket().leave(this.creator.getSessionID());
     delete this.players[player.getSessionID()];
+    this.io.to(this.creator.getSessionID()).emit('playerHasLeaved', player.toObject());
+    this.io.to(this.creator.getSessionID()).emit('setGameConfiguration', this.getCurrentConfiguration());
+};
+
+Game.prototype.isCreator = function (player){
+    return this.creator.getSessionID() === player.getSessionID();
+};
+//Récupére la liste des joueurs
+Game.prototype.getPlayers = function (player) {
+    return this.players;
 };
 
 module.exports = Game;

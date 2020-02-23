@@ -58,5 +58,12 @@ Player.prototype.getSocket = function (){
     return this.socket;
 };
 
+Player.prototype.toObject = function () {
+    return {
+        socket_id: this.socket_id,
+        session_id: this.session_id,
+        connected: this.connected,
+    }
+};
 
 module.exports = Player;

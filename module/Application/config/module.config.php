@@ -27,6 +27,16 @@ return [
                     ],
                 ],
             ],
+            'lobby' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/lobby/:lobby_slug',
+                    'defaults' => [
+                        'controller' => Controller\IndexController::class,
+                        'action'     => 'lobby',
+                    ],
+                ],
+            ],
             'play' => [
                 'type'    => Segment::class,
                 'options' => [

@@ -23,6 +23,7 @@ module.exports = {
     game_duration: 120 * 1000,
     revelation_duration: 1000,
     nbCardMaxDefault: 36,
+    nbPlayerMax: 1,
 
     mysql: {
         host: 'localhost',

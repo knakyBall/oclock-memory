@@ -1,0 +1,22 @@
+.lobby-playerlist {
+  max-width: 80vw;
+  overflow: hidden;
+  background-color: #ffffff;
+  width: 500px;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+
+  -webkit-box-shadow: $box-shadow;
+  -moz-box-shadow: $box-shadow;
+  box-shadow: $box-shadow;
+
+  padding: 20px;
+
+  .creator-row {
+    margin-bottom: 30px;
+  }
+}

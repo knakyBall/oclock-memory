@@ -18,15 +18,19 @@ class IndexController extends AbstractActionController
 {
     public function indexAction()
     {
-        //Utilisé pour générer un "session_id"
-        $container = new Container('initialized');
         return new ViewModel();
+    }
+
+    public function lobbyAction()
+    {
+        $lobbySlug = $this->params()->fromRoute('lobby_slug');
+        return new ViewModel([
+            'lobbySlug' => $lobbySlug
+        ]);
     }
 
     public function playAction()
     {
-        //Utilisé pour générer un "session_id"
-        $container = new Container('initialized');
         return new ViewModel();
     }
 }
