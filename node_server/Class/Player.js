@@ -5,6 +5,8 @@ function Player(session_id) {
     this.socket_id = null;
     /** @type string **/
     this.session_id = session_id;
+    /** @type string **/
+    this.pseudo = this.session_id;
     /** @type boolean **/
     this.connected = false;
     /** @type ?Game **/
@@ -12,6 +14,16 @@ function Player(session_id) {
     /** @type Object **/
     this.socket = null;
 }
+
+//Change le pseudo du joueur
+Player.prototype.setPseudo = function(pseudo){
+    this.pseudo = pseudo;
+};
+
+//Récupère le pseudo du joueur
+Player.prototype.getPseudo = function(){
+    return this.pseudo;
+};
 
 //Défini le jeu auquel le joueur est en train de jouer
 Player.prototype.setPlayingGame = function(game){
@@ -63,6 +75,7 @@ Player.prototype.toObject = function () {
         socket_id: this.socket_id,
         session_id: this.session_id,
         connected: this.connected,
+        pseudo: this.pseudo
     }
 };
 

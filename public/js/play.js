@@ -7,7 +7,8 @@
         score_saved: false,
         time_reached: false,
         game_duration: null,
-        cards: []
+        winner: null,
+        players_cards: []
     };
 
     let progressBarInterval = null;
@@ -27,9 +28,9 @@
 
         //Sur la réception de l'event permettant d'afficher une carte
         socket.on('revealCards', (revealedCards) => {
-            revealedCards.map(({card_index, card}) => {
+            revealedCards.map(({player_session_id, card_index, card}) => {
                 //On supprime la classe backed et on ajoute à la place la classe du fruit correspondant venant du serveur node
-                const card_element = jQuery(`.cards-container .fruit-card[data-index=${card_index}]`);
+                const card_element = jQuery(`.player-workspace[data-player="${player_session_id}"] .cards-container .fruit-card[data-index=${card_index}]`);
                 card_element.find('.fruit-card-image')
                     .removeClass('backed')
                     .addClass(card.fruit);
@@ -41,9 +42,9 @@
 
         //Sur la réception de l'event permettant de cacher une carte
         socket.on('hideCards', (hiddenCards) => {
-            hiddenCards.map(({card_index}) => {
+            hiddenCards.map(({player_session_id, card_index}) => {
                 //On supprime la classe la classe de fruit correspondant précédemment stockée dans les data de l'élément
-                const card_element = jQuery(`.cards-container .fruit-card[data-index=${card_index}]`);
+                const card_element = jQuery(`.player-workspace[data-player="${player_session_id}"] .cards-container .fruit-card[data-index=${card_index}]`);
                 //et on ajoute à la place la classe backed
                 card_element.find('.fruit-card-image')
                     .removeClass(card_element.data('fruit'))
@@ -64,8 +65,11 @@
     const generateBackedCards = (cards_config) => {
         let html = '';
         cards_config.map((fruit_object, card_index) => {
-            html += `<div class="fruit-card" data-index="${card_index}">
-                    <div class="fruit-card-image fruit ${fruit_object.fruit}"></div>
+            html += `
+                 <div class="fruit-scale">
+                     <div class="fruit-card" data-index="${card_index}">
+                        <div class="fruit-card-image fruit ${fruit_object.fruit}"></div>
+                     </div>
                  </div>`;
         });
         if (html === "") {
@@ -75,6 +79,7 @@
     };
 
     const setCurrentConfiguration = (config) => {
+        let session_id = getCookie('PHPSESSID');
         initialized = true;
         gameConfig = config;
         if (config === null) {
@@ -82,16 +87,29 @@
             throw new Error('Aucun jeu en cours');
         }
 
+        console.log("config", config);
         //Génération des cartes en HTML en fonction de la configuration de la session de jeu envoyée depuis le serveur socket
-        let cardsHTML = generateBackedCards(config.cards);
-        jQuery('.cards-container').html(cardsHTML);
-        //Gestion du clic sur une carte
-        jQuery('.cards-container .fruit-card').on('click', function () {
-            if (gameConfig.finished) return false;
-            //Ici on va demander au serveur node quel est la carte qu'on vient de sélectionner
-            let card_index = jQuery(this).data('index');
-            socketEmit('compareCard', {card_index});
+        let playersCardsHTML = ``;
+
+        let workspace_scale = 1;
+        const nbPlayers = Object.keys(config.players).length;
+        if (nbPlayers === 2) {
+            workspace_scale = 0.75;
+        } else if (nbPlayers >= 3) {
+            workspace_scale = 0.5;
+        }
+        //Pour chaque joueur on écrit les cartes
+        Object.keys(config.players_cards).map((player_session_id) => {
+            const cards = config.players_cards[player_session_id];
+            playersCardsHTML += `<div class="player-workspace" data-player="${player_session_id}" style="transform: scale(${workspace_scale})">
+                                    <h3>${config.players[player_session_id].pseudo}</h3>
+                                    <div class="cards-container">
+                                        ${generateBackedCards(cards)}
+                                    </div>
+                                </div>`;
         });
+        jQuery('.game-container').html(playersCardsHTML);
+
         setTimeout(() => {
             //Petit algorithme pour donner une rotation random pour l'esthetique
             jQuery('.cards-container .fruit-card').each(function () {
@@ -99,6 +117,16 @@
                 jQuery(this).css("transform", "rotate(" + angle + "deg)");
             })
         }, 50);
+
+
+        //Gestion du clic sur une carte, uniquement pour le joueur présent
+        jQuery('.player-workspace[data-player="' + session_id + '"] .cards-container .fruit-card').on('click', function () {
+            if (gameConfig.finished) return false;
+            //Ici on va demander au serveur node quel est la carte qu'on vient de sélectionner
+            let card_index = jQuery(this).data('index');
+            socketEmit('compareCard', {card_index});
+        });
+
         const $utilsContainer = jQuery('.utils-container');
         //Génération de la progress barre de timer
         if (config.started_at) {
@@ -141,7 +169,7 @@
                 clearInterval(progressBarInterval);
                 progressBarInterval = null;
             }
-            const diff = moment(config.finished_at, 'HH:mm:ss').diff(moment(config.started_at, 'HH:mm:ss'))/1000;
+            const diff = moment(config.finished_at, 'HH:mm:ss').diff(moment(config.started_at, 'HH:mm:ss')) / 1000;
             const duration = moment.utc(Math.round(diff) * 1000);
 
             const totalTime = moment(config.started_at).add(config.game_duration, 'milliseconds').diff(moment(config.started_at));
@@ -166,15 +194,20 @@
                 htmlResult = `
                 <div id="resultDiv">
                     <h2>
-                        Félicitations tu as fini avec un score de 
+                        Félicitations à ${config.winner.pseudo} qui a fini avec un score de 
                         <span class="highlight">${duration.format('m')} min</span> et 
-                        <span class="highlight">${duration.format('s')} sec</span>
+                        <span class="highlight">${duration.format('s')} sec</span> !
                     </h2>
-                    <div class="interactionDiv">
-                        <button type="button" class="btn btn-primary mt-5" onclick="saveMyScore()">Enregistrer mon score</button>
+                    <div class="interactionDiv">`;
+                if (config.winner.session_id === session_id) {
+                    htmlResult += `
+                        <button type="button" class="save-score-btn btn btn-primary mt-5" onclick="saveMyScore()">Enregistrer mon score</button>
                         <div class="spinner-border text-light" role="status" style="display: none">
                           <span class="sr-only">Veuillez patienter...</span>
-                        </div>
+                        </div>`;
+                }
+                htmlResult += `
+                        <button type="button" class="btn btn-primary mt-5" onclick="document.location.href='/'">Retourner au menu principal</button>
                     </div>
                 </div>`;
             }
@@ -192,14 +225,16 @@
     };
 
     window.saveMyScore = function () {
-        const pseudo = prompt("Quel est tom pseudo ?");
+        if (gameConfig.winner.session_id !== getCookie('PHPSESSID')){
+            return false;
+        }
         const $interractionDiv = jQuery('#resultDiv').find('.interactionDiv');
-        const $button = $interractionDiv.find("button");
+        const $button = $interractionDiv.find(".save-score-btn");
         const $spinner = $interractionDiv.find(".spinner-border");
 
         $button.hide();
         $spinner.fadeIn();
-        socketEmit('saveGameScore', {pseudo}, (data) => {
+        socketEmit('saveGameScore', {}, (data) => {
             if (!data.success) {
                 $button.show();
                 $spinner.hide();

@@ -81,6 +81,9 @@ const bindSocketEvents = function (socket) {
     //Demande de création d'une nouvelle partie
     socket.on('createNewGame', (args) => {
         if (gamesList[socket.player.getSessionID()] === undefined || (gamesList[socket.player.getSessionID()] && gamesList[socket.player.getSessionID()].isStarted())) {
+            if (gamesList[socket.player.getSessionID()]){
+                gamesList[socket.player.getSessionID()].stop();
+            }
             gamesList[socket.player.getSessionID()] = new Game(server, socket.player);
         }
         socket.player.setPlayingGame(gamesList[socket.player.getSessionID()]);
@@ -154,16 +157,59 @@ const bindSocketEvents = function (socket) {
         gamesList[socket.player.getSessionID()].start();
     });
 
+    socket.on('setPseudo', ({pseudo}, cb) => {
+        try {
+            logger.verbose('[setPseudo]', `Changement du pseudo de ${socket.player.getPseudo()} en ${pseudo}`)
+            //Si le pseudo est correctement construit, on continue
+            if (/^([a-zA-Z0-9-_]{2,36})$/.test(pseudo)) {
+                socket.player.setPseudo(pseudo);
+
+                //Si le joueur est dans un lobby ou dans une partie, on synchronise son pseudo à tout le monde
+                if (socket.player.getPlayingGame()){
+                    server.to(socket.player.getPlayingGame().getCreator().getSessionID()).emit('setGameConfiguration', socket.player.getPlayingGame().getCurrentConfiguration());
+                }
+                if (typeof cb === "function"){
+                    return cb({
+                        success: true
+                    });
+                }
+            }
+            //Sinon on répond que l'opération ne s'est pas bien effectuée
+            else if (typeof cb === "function") {
+                return cb({
+                    success: false,
+                    message: "Le pseudo n'est pas correcte"
+                });
+            }
+        }
+        catch(e){
+            //Une erreur inconnue est survenue, on notifie l'interface
+            logger.warn('[setPseudo]', `Changement du pseudo de ${socket.player.getPseudo()} échoué`, e);
+            if (typeof cb === "function") {
+                return cb({
+                    success: false,
+                    message: e.message
+                });
+            }
+        }
+    });
     //Demande de révéler une carte
     socket.on('compareCard', (args) => {
-        if (gamesList[socket.player.getSessionID()] && gamesList[socket.player.getSessionID()].isFinished()) {
-            return false;
+        try {
+            let playerGame = socket.player.getPlayingGame();
+
+            if (!playerGame || (playerGame && (gamesList[playerGame.getSlug()].isFinished() || !gamesList[playerGame.getSlug()].isStarted()))) {
+                throw new Error(`Impossible d'afficher les cartes de cette partie`);
+            }
+            if (args.card_index === undefined) {
+                throw new Error(`Cet index de carte n'existe pas`);
+            }
+            logger.verbose(`[compareCard]`, `Comparaison de la carte ${args.card_index} du joueur ${socket.player.getPseudo()}`);
+            playerGame.compareCard(args.card_index, socket.player);
         }
-        if (args.card_index === undefined) {
-            throw new Error(`Cet index de carte n'existe pas`);
+        catch(e){
+            logger.warn(`[compareCard]`, e.message);
         }
-        logger.verbose(`[connection]`, `Comparaison de la carte ${args.card_index}`);
-        gamesList[socket.player.getSessionID()].compareCard(args.card_index);
     });
 
     //Demande de suppression de la partie du joueur
@@ -199,12 +245,7 @@ const bindSocketEvents = function (socket) {
     });
     //Demande d'enregistrement du score utilisateur
     socket.on('saveGameScore', (args, cb) => {
-        if (!args.pseudo) {
-            return cb({
-                success: false,
-                message: "Le pseudo n'est pas correct"
-            });
-        } else if (!gamesList[socket.player.getSessionID()]) {
+        if (!gamesList[socket.player.getSessionID()]) {
             return cb({
                 success: false,
                 message: "Aucune session de jeu en cours"
@@ -215,7 +256,7 @@ const bindSocketEvents = function (socket) {
                 message: "La session de jeu n'est pas terminée"
             });
         }
-        gamesList[socket.player.getSessionID()].saveScore(args.pseudo).then(() => {
+        gamesList[socket.player.getSessionID()].saveScore().then(() => {
             return cb({
                 success: true
             });

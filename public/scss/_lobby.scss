@@ -19,4 +19,22 @@
   .creator-row {
     margin-bottom: 30px;
   }
+  .pseudoForm {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: center;
+    .input-button {
+      display: flex;
+      flex-direction: row;
+      flex: 1;
+      align-items: center;
+      button {
+        margin-left: 10px;
+      }
+      input[type="text"] {
+        text-align: center;
+      }
+    }
+  }
 }

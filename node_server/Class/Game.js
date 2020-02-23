@@ -23,12 +23,18 @@ function Game(io, creator, nbCardMax = config.nbCardMaxDefault) {
     this.nbCardMax = (nbCardMax > config.nbCardMaxDefault) ? config.nbCardMaxDefault : ((nbCardMax <= 3) ? config.nbCardMaxDefault : nbCardMax);
     /** @type {Object.<string, Player>} players **/
     this.players = {};
-    /** @type {Array.<number>} comparing_cards **/
-    this.comparing_cards = [];
+    /** @type {Object.<string, Card[]>} players_cards **/
+    this.players_cards = {};
+    /** @type {Object.<string, Array.<number>>} comparing_cards **/
+    this.comparing_players_cards = {};
     /** @type boolean score_saved **/
     this.score_saved = false;
     /** @type boolean score_saved **/
     this.time_reached = false;
+    /** @type ?Player winner **/
+    this.winner = false;
+
+    this.addPlayer(creator);
 
     EventEmitter.call(this);
 }
@@ -45,19 +51,22 @@ Game.prototype.getGameConfig = function () {
         finished_at: this.finished_at,
         started_at: this.started_at,
         score_saved: this.score_saved,
-        cards: this.cards,
+        players_cards: this.players_cards,
         time_reached: this.time_reached,
         game_duration: config.game_duration,
         players: playersConfig,
+        winner: this.winner ? this.winner.toObject() : null,
         creator: this.creator.toObject(),
     };
-}
+};
+
 Game.prototype.goToLobby = function (player) {
     player.getSocket().emit('goToLobby', {lobby_slug: this.creator.getSessionID()});
 };
 
 Game.prototype.setCreator = function (creator) {
     this.creator = creator;
+    this.addPlayer(creator);
 };
 
 //Génère une nouvelle configuration de jeu
@@ -69,17 +78,19 @@ Game.prototype.generateNewGameConfiguration = function () {
     //Récupération d'un nombre max de cartes
     let availablesCard = [...config.available_fruits].splice(0, Math.round(this.nbCardMax / 2));
     let cards_keys = availablesCard.concat(availablesCard);
-    cards_keys.sort(() => Math.random() - 0.5);
-    let cards = [];
-    cards_keys.map((card_key) => {
-        try {
-            cards.push(new Card(card_key));
-        } catch (e) {
-            logger.error('[GAME]', e);
-        }
-    });
 
-    this.cards = cards;
+    Object.keys(this.players).map((player_session_id) => {
+        cards_keys.sort(() => Math.random() - 0.5);
+        let cards = [];
+        cards_keys.map((card_key) => {
+            try {
+                cards.push(new Card(card_key));
+            } catch (e) {
+                logger.error('[GAME]', e);
+            }
+        });
+        this.players_cards[player_session_id] = cards;
+    });
 };
 
 //Récupère la configuration actuelle du jeu
@@ -88,83 +99,96 @@ Game.prototype.getCurrentConfiguration = function () {
         return this.getGameConfig();
     }
     logger.debug('[GAME]', `Envoi de la configuration du jeu`);
-    let cards = this.cards;
-    cards = cards.map((card) => {
-        return card.toObject();
+    let players_cards = {};
+    Object.keys(this.players_cards).map((player_session_id) => {
+        players_cards[player_session_id] = [];
+        this.players_cards[player_session_id].map((Card) => {
+            players_cards[player_session_id].push(Card.toObject());
+        });
     });
-    return {...this.getGameConfig(), cards}
+    return {...this.getGameConfig(), players_cards}
 };
 
 let compareCardTimeout = null;
 //Déclanchée quand un joueur veut révéler une carte
-Game.prototype.compareCard = function (card_index) {
+Game.prototype.compareCard = function (card_index, player) {
     //Si la partie est finie on ne fait rien
     if (this.finished_at) {
         return false;
     }
 
+    if (this.comparing_players_cards[player.getSessionID()] === undefined){
+        this.comparing_players_cards[player.getSessionID()] = [];
+    }
+
     //Si la carte existe bien
-    if (this.cards[card_index]) {
-        //Si la carte est déja en train d'être comparée,
-        //Ou si la carte est déja découverte, on ne fait rien
-        if (this.comparing_cards.includes(card_index) || this.cards[card_index].isRevealed()) {
+    if (this.players_cards[player.getSessionID()] && this.players_cards[player.getSessionID()][card_index]) {
+        //Si la carte est déjà en train d'être comparée,
+        //Ou si la carte est déjà découverte, on ne fait rien
+        if (this.comparing_players_cards[player.getSessionID()].includes(card_index) || this.players_cards[player.getSessionID()][card_index].isRevealed()) {
             return false;
         }
-        //Suppression du timout de masquage des cartes si on affiche une autre carte
+        //Suppression du timeout de masquage des cartes si on affiche une autre carte
         if (compareCardTimeout) {
             clearTimeout(compareCardTimeout);
             compareCardTimeout = null;
         }
-        if (this.comparing_cards.length > 1) {
+        if (this.comparing_players_cards[player.getSessionID()].length > 1) {
             //S'il y a déjà au moins 2 cartes dans le tableau de comparaison c'est qu'on essaie d'en comparer une de plus
             //Dans ce cas là on cache les précédentes carte comparées pour avoir un maximum de 2 cartes comparées en même temps
             let cardsToHide = [];
-            this.comparing_cards.map((comparing_card_index) => {
-                this.cards[comparing_card_index].setRevealState(false);
-                cardsToHide.push({card_index: comparing_card_index, card: this.cards[comparing_card_index].toObject()})
+            this.comparing_players_cards[player.getSessionID()].map((comparing_card_index) => {
+                this.players_cards[player.getSessionID()][comparing_card_index].setRevealState(false);
+                cardsToHide.push({
+                    player_session_id: player.getSessionID(),
+                    card_index: comparing_card_index,
+                    card: this.players_cards[player.getSessionID()][comparing_card_index].toObject()
+                })
             });
             this.io.to(this.creator.getSessionID()).emit('hideCards', cardsToHide);
-            this.comparing_cards = [];
+            this.comparing_players_cards[player.getSessionID()] = [];
         }
         //On ajoute la carte dans le tableau de comparaison
-        this.comparing_cards.push(card_index);
+        this.comparing_players_cards[player.getSessionID()].push(card_index);
 
         //On révèle la carte
-        this.cards[card_index].setRevealState(true);
+        this.players_cards[player.getSessionID()][card_index].setRevealState(true);
         //Puis on émit l'event pour révéler la carte au joueur
         this.io.to(this.creator.getSessionID()).emit('revealCards', [{
+            player_session_id: player.getSessionID(),
             card_index,
-            card: this.cards[card_index].toObject()
+            card: this.players_cards[player.getSessionID()][card_index].toObject()
         }]);
 
         //Si il y a une paire de cartes révélées, on démarre un timer pour les cacher au bout de "config.revelation_duration"
-        if (this.comparing_cards.length === 2) {
+        if (this.comparing_players_cards[player.getSessionID()].length === 2) {
             //Si les cartes sont identiques, alors on les laisses révélées
-            if (this.cards[this.comparing_cards[0]].getFruit() === this.cards[this.comparing_cards[1]].getFruit()) {
+            if (this.players_cards[player.getSessionID()][this.comparing_players_cards[player.getSessionID()][0]].getFruit() === this.players_cards[player.getSessionID()][this.comparing_players_cards[player.getSessionID()][1]].getFruit()) {
                 logger.debug('[GAME]', `Paire découverte`);
-                this.comparing_cards = [];
+                this.comparing_players_cards[player.getSessionID()] = [];
 
                 //Vérification de toutes les cartes pour voir si il reste des cartes à découvrir
                 let hasOneHiddenCard = false;
-                this.cards.map((card) => {
+                this.players_cards[player.getSessionID()].map((card) => {
                     if (!card.isRevealed()) {
                         hasOneHiddenCard = true;
                     }
                 });
                 if (!hasOneHiddenCard) {
-                    logger.debug('[GAME]', `Jeu terminé avant la fin du temp impartit !`);
-                    this.finish();
+                    logger.debug('[GAME]', `${player.getPseudo()} à gagné la partie !`);
+                    this.winner = player;
+                    this.finish(false);
                 }
             } else {
                 //Démarrage du timeout
                 compareCardTimeout = setTimeout(() => {
                     let cardsToHide = [];
-                    this.comparing_cards.map((comparing_card_index) => {
-                        this.cards[comparing_card_index].setRevealState(false);
+                    this.comparing_players_cards[player.getSessionID()].map((comparing_card_index) => {
+                        this.players_cards[player.getSessionID()][comparing_card_index].setRevealState(false);
                         cardsToHide.push({card_index: comparing_card_index})
                     });
                     this.io.to(this.creator.getSessionID()).emit('hideCards', cardsToHide);
-                    this.comparing_cards = [];
+                    this.comparing_players_cards[player.getSessionID()] = [];
                 }, config.revelation_duration);
             }
         }
@@ -173,8 +197,10 @@ Game.prototype.compareCard = function (card_index) {
 
 //Déclanchée en fin de partie pour révéler toutes les cartes
 Game.prototype.revealAllCards = function () {
-    this.cards.map((Card) => {
-        Card.setRevealState(true)
+    Object.keys(this.players_cards).map((player_session_id) => {
+        this.players_cards[player_session_id].map((Card) => {
+            Card.setRevealState(true)
+        });
     });
 };
 
@@ -186,6 +212,7 @@ Game.prototype.start = function () {
     logger.debug('[GAME]', `Démarrage du jeu`);
     this.started_at = moment();
     this.finished_at = null;
+    this.winner = null;
     this.generateNewGameConfiguration();
     this.timeoutBeforeGameEnd = setTimeout(this.finish.bind(this, true), config.game_duration);
     this.io.to(this.creator.getSessionID()).emit('newGameStarted');
@@ -205,11 +232,12 @@ Game.prototype.stop = function () {
     }
     this.started_at = null;
     this.finished_at = moment();
-    this.cards = [];
-    this.players = {};
-    this.players.map((player) => {
-        player.getSocket().leave(this.creator.getSessionID());
+    this.winner = null;
+    this.players_cards = [];
+    Object.keys(this.players).map((player_session_id) => {
+        this.players[player_session_id].getSocket().leave(this.creator.getSessionID());
     });
+    this.players = {};
 };
 
 
@@ -231,13 +259,13 @@ Game.prototype.finish = function (time_reached = false) {
     });
 };
 
-Game.prototype.saveScore = function (pseudo) {
+Game.prototype.saveScore = function () {
     if (this.score_saved){
         return Promise.reject(new Error("Score déjà sauvegardé pour cette session"));
     }
     return ScoreModel
         .create({
-            pseudo,
+            pseudo: this.winner.getPseudo(),
             started_at: this.started_at.format('HH:mm:ss'),
             finished_at: this.finished_at.format('HH:mm:ss'),
             nb_cards: this.nbCardMax,
@@ -259,6 +287,10 @@ Game.prototype.isStarted = function () {
     return this.started_at !== null;
 };
 
+Game.prototype.getSlug = function () {
+    return this.creator.getSessionID();
+};
+
 /*************************************/
 /**       Pistes d'amélioration     **/
 /*************************************/
@@ -268,8 +300,8 @@ Game.prototype.addPlayer = function (player) {
     if (this.started_at) {
         return false;
     }
-    if(player.getSessionID() === this.creator.getSessionID()){
-        throw new Error("Impossible d'ajouter ce joueur, c'est déja le créateur de la partie");
+    if(this.players[player.getSessionID()] !== undefined){
+        throw new Error("Impossible d'ajouter ce joueur, il est déjà dans la partie");
     }
     this.players[player.getSessionID()] = player;
     this.players[player.getSessionID()].getSocket().join(this.creator.getSessionID());

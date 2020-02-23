@@ -21,6 +21,20 @@
   }
 }
 
+.game-container {
+  display: flex;
+  flex-direction: row;
+  .player-workspace {
+    h3 {
+      font-weight: bold;
+      font-size: 40px;
+      text-shadow: 1px 1px 1px #ffffff;
+    }
+  }
+}
+
 .utils-container {
+  padding-left: 50px;
+  padding-right: 50px;
   margin-top: 50px;
 }

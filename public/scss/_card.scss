@@ -1,106 +1,113 @@
-.fruit-card {
-  padding: 10px;
-  height: 100px;
-  width: 100px;
-  display: flex;
-  background-color: #ffffff;
-  margin: 5px;
-  cursor: pointer;
-
-  border-radius: 3px 3px 3px 3px;
-  -moz-border-radius: 3px 3px 3px 3px;
-  -webkit-border-radius: 3px 3px 3px 3px;
-
-  -webkit-box-shadow: $box-shadow;
-  -moz-box-shadow: $box-shadow;
-  box-shadow: $box-shadow;
-
-  transition: all 0.3s ease-out;
-
-  .fruit-card-image {
+.fruit-scale {
+  .fruit-card {
+    padding: 10px;
+    height: 100px;
+    width: 100px;
     display: flex;
-    flex: 1;
+    background-color: #ffffff;
+    margin: 5px;
+    cursor: pointer;
 
-    &.fruit {
-      background: url(/img/cards.png);
-      background-position-x: center;
-    }
+    transform: scale(0.5);
+    border-radius: 3px 3px 3px 3px;
+    -moz-border-radius: 3px 3px 3px 3px;
+    -webkit-border-radius: 3px 3px 3px 3px;
 
-    &.backed {
-      background: url(/img/oclock.png) no-repeat center;
-      background-size: contain;
-    }
+    -webkit-box-shadow: $box-shadow;
+    -moz-box-shadow: $box-shadow;
+    box-shadow: $box-shadow;
 
-    &.red-apple {
-      background-position-y: -10px;
-    }
+    transition: all 0.3s ease-out;
 
-    &.banana {
-      background-position-y: -110px;
-    }
+    .fruit-card-image {
+      display: flex;
+      flex: 1;
 
-    &.peach {
-      background-position-y: -210px;
-    }
+      &.fruit {
+        background: url(/img/cards.png);
+        background-position-x: center;
+      }
 
-    &.green-lemon {
-      background-position-y: -310px;
-    }
+      &.backed {
+        background: url(/img/oclock.png) no-repeat center !important;
+        background-size: contain !important;
+      }
 
-    &.pomegranate {
-      background-position-y: -410px;
-    }
+      &.hire-me {
+        background-position-y: -10px;
+      }
 
-    &.apricot {
-      background-position-y: -510px;
-    }
+      &.red-apple {
+        background-position-y: -110px;
+      }
 
-    &.yellow-lemon {
-      background-position-y: -610px;
-    }
+      &.banana {
+        background-position-y: -210px;
+      }
 
-    &.strawberry {
-      background-position-y: -710px;
-    }
+      &.peach {
+        background-position-y: -310px;
+      }
 
-    &.green-apple {
-      background-position-y: -810px;
-    }
+      &.green-lemon {
+        background-position-y: -410px;
+      }
 
-    &.nectarine {
-      background-position-y: -910px;
-    }
+      &.pomegranate {
+        background-position-y: -510px;
+      }
 
-    &.green-grape {
-      background-position-y: -1010px;
-    }
+      &.apricot {
+        background-position-y: -610px;
+      }
 
-    &.watermelon {
-      background-position-y: -1110px;
-    }
+      &.yellow-lemon {
+        background-position-y: -710px;
+      }
 
-    &.purple-plum {
-      background-position-y: -1210px;
-    }
+      &.strawberry {
+        background-position-y: -810px;
+      }
 
-    &.pear {
-      background-position-y: -1310px;
-    }
+      &.green-apple {
+        background-position-y: -910px;
+      }
 
-    &.red-cherry {
-      background-position-y: -1410px;
-    }
+      &.nectarine {
+        background-position-y: -1010px;
+      }
 
-    &.red-grape {
-      background-position-y: -1510px;
-    }
+      &.green-grape {
+        background-position-y: -1110px;
+      }
 
-    &.mango {
-      background-position-y: -1610px;
-    }
+      &.watermelon {
+        background-position-y: -1210px;
+      }
 
-    &.yellow-cherry {
-      background-position-y: -1710px;
+      &.purple-plum {
+        background-position-y: -1310px;
+      }
+
+      &.pear {
+        background-position-y: -1410px;
+      }
+
+      &.red-cherry {
+        background-position-y: -1510px;
+      }
+
+      &.red-grape {
+        background-position-y: -1610px;
+      }
+
+      &.mango {
+        background-position-y: -1710px;
+      }
+
+      &.yellow-cherry {
+        background-position-y: -1810px;
+      }
     }
   }
 }
