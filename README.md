@@ -1,149 +1,27 @@
-# laminas-mvc-skeleton
+# oclock-memory
 
 ## Introduction
 
-This is a skeleton application using the Laminas MVC layer and module
-systems. This application is meant to be used as a starting place for those
-looking to get their feet wet with Laminas MVC.
+Ce projet un jeu de type memory dans un contexte de test technique pour O'Clock !
 
-## Installation using Composer
-
-The easiest way to create a new Laminas MVC project is to use
-[Composer](https://getcomposer.org/). If you don't have it already installed,
-then please install as per the [documentation](https://getcomposer.org/doc/00-intro.md).
-
-To create your new Laminas MVC project:
-
+## Cloner le projet
 ```bash
-$ composer create-project -sdev laminas/laminas-mvc-skeleton path/to/install
+$ git clone git@github.com:knakyBall/oclock-memory.git path/to/install
 ```
 
-Once installed, you can test it out immediately using PHP's built-in web server:
+## Installation du serveur web
 
-```bash
-$ cd path/to/install
-$ php -S 0.0.0.0:8080 -t public
-# OR use the composer alias:
-$ composer run --timeout 0 serve
-```
+### Installation via Apache
 
-This will start the cli-server on port 8080, and bind it to all network
-interfaces. You can then visit the site at http://localhost:8080/
-- which will bring up Zend Framework welcome page.
 
-**Note:** The built-in CLI server is *for development only*.
-
-## Development mode
-
-The skeleton ships with [laminas-development-mode](https://github.com/laminas/laminas-development-mode)
-by default, and provides three aliases for consuming the script it ships with:
-
-```bash
-$ composer development-enable  # enable development mode
-$ composer development-disable # disable development mode
-$ composer development-status  # whether or not development mode is enabled
-```
-
-You may provide development-only modules and bootstrap-level configuration in
-`config/development.config.php.dist`, and development-only application
-configuration in `config/autoload/development.local.php.dist`. Enabling
-development mode will copy these files to versions removing the `.dist` suffix,
-while disabling development mode will remove those copies.
-
-Development mode is automatically enabled as part of the skeleton installation process. 
-After making changes to one of the above-mentioned `.dist` configuration files you will
-either need to disable then enable development mode for the changes to take effect,
-or manually make matching updates to the `.dist`-less copies of those files.
-
-## Running Unit Tests
-
-To run the supplied skeleton unit tests, you need to do one of the following:
-
-- During initial project creation, select to install the MVC testing support.
-- After initial project creation, install [laminas-test](https://docs.laminas.dev/laminas-test/):
-
-  ```bash
-  $ composer require --dev laminas/laminas-test
-  ```
-
-Once testing support is present, you can run the tests using:
-
-```bash
-$ ./vendor/bin/phpunit
-```
-
-If you need to make local modifications for the PHPUnit test setup, copy
-`phpunit.xml.dist` to `phpunit.xml` and edit the new file; the latter has
-precedence over the former when running tests, and is ignored by version
-control. (If you want to make the modifications permanent, edit the
-`phpunit.xml.dist` file.)
-
-## Using Vagrant
-
-This skeleton includes a `Vagrantfile` based on ubuntu 18.04 (bento box)
-with configured Apache2 and PHP 7.3. Start it up using:
-
-```bash
-$ vagrant up
-```
-
-Once built, you can also run composer within the box. For example, the following
-will install dependencies:
-
-```bash
-$ vagrant ssh -c 'composer install'
-```
-
-While this will update them:
-
-```bash
-$ vagrant ssh -c 'composer update'
-```
-
-While running, Vagrant maps your host port 8080 to port 80 on the virtual
-machine; you can visit the site at http://localhost:8080/
-
-> ### Vagrant and VirtualBox
->
-> The vagrant image is based on bento/ubuntu-18.04. If you are using VirtualBox as
-> a provider, you will need:
->
-> - Vagrant 2.2.6 or later
-> - VirtualBox 6.0.14 or later
-
-For vagrant documentation, please refer to [vagrantup.com](https://www.vagrantup.com/)
-
-## Using docker-compose
-
-This skeleton provides a `docker-compose.yml` for use with
-[docker-compose](https://docs.docker.com/compose/); it
-uses the `Dockerfile` provided as its base. Build and start the image using:
-
-```bash
-$ docker-compose up -d --build
-```
-
-At this point, you can visit http://localhost:8080 to see the site running.
-
-You can also run composer from the image. The container environment is named
-"laminas", so you will pass that value to `docker-compose run`:
-
-```bash
-$ docker-compose run laminas composer install
-```
-
-## Web server setup
-
-### Apache setup
-
-To setup apache, setup a virtual host to point to the public/ directory of the
-project and you should be ready to go! It should look something like below:
+Pour configurer apache, configurez un virtual host pour pointer vers le répertoire public/ du
+projet et ça devrait être OK pour la suite ! Cela devrait ressembler à quelque chose comme ceci :
 
 ```apache
 <VirtualHost *:80>
-    ServerName laminasapp.localhost
-    DocumentRoot /path/to/laminasapp/public
-    <Directory /path/to/laminasapp/public>
+    ServerName memory.adopteundev.fr
+    DocumentRoot /path/to/oclock-memory/public
+    <Directory /path/to/oclock-memory/public>
         DirectoryIndex index.php
         AllowOverride All
         Order allow,deny
@@ -155,11 +33,10 @@ project and you should be ready to go! It should look something like below:
 </VirtualHost>
 ```
 
-### Nginx setup
+### Installation via Nginx
 
-To setup nginx, open your `/path/to/nginx/nginx.conf` and add an
-[include directive](http://nginx.org/en/docs/ngx_core_module.html#include) below
-into `http` block if it does not already exist:
+Pour installer via nginx, ouvrez le fichier `/path/to/nginx/nginx.conf` et ajouter un
+[directive d'inclusion](http://nginx.org/en/docs/ngx_core_module.html#include) dans le block `http` si il n'existe pas déjà:
 
 ```nginx
 http {
@@ -168,15 +45,14 @@ http {
 }
 ```
 
-
-Create a virtual host configuration file for your project under `/path/to/nginx/sites-enabled/laminasapp.localhost.conf`
-it should look something like below:
+Créez un fichier de configuration de virtual host pour votre projet sous `/path/to/nginx/sites-enabled/laminasapp.localhost.conf`
+Cela devrait ressembler à quelque chose comme ceci :
 
 ```nginx
 server {
     listen       80;
-    server_name  laminasapp.localhost;
-    root         /path/to/laminasapp/public;
+    server_name  memory.adopteundev.fr;
+    root         /path/to/oclock-memory/public;
 
     location / {
         index index.php;
@@ -184,40 +60,58 @@ server {
     }
 
     location @php {
-        # Pass the PHP requests to FastCGI server (php-fpm) on 127.0.0.1:9000
         fastcgi_pass   127.0.0.1:9000;
-        fastcgi_param  SCRIPT_FILENAME /path/to/laminasapp/public/index.php;
+        fastcgi_param  SCRIPT_FILENAME /path/to/oclock-memory/public/index.php;
         include fastcgi_params;
     }
 }
 ```
 
-Restart the nginx, now you should be ready to go!
+Redémarrez nginx, et ça devrait être OK pour la suite !
 
-## QA Tools
-
-The skeleton does not come with any QA tooling by default, but does ship with
-configuration for each of:
-
-- [phpcs](https://github.com/squizlabs/php_codesniffer)
-- [phpunit](https://phpunit.de)
-
-Additionally, it comes with some basic tests for the shipped
-`Application\Controller\IndexController`.
-
-If you want to add these QA tools, execute the following:
+Une fois le dépôt cloné, il n'y a plus qu'à installer les dépendances.
 
 ```bash
-$ composer require --dev phpunit/phpunit squizlabs/php_codesniffer zendframework/zend-test
+$ cd path/to/install
+$ composer install
+$ bower install
 ```
 
-We provide aliases for each of these tools in the Composer configuration:
+Ces commandes vont permettre d'installer toutes les dépendances du client.
+
+**Note:** Il faut ensuite lancer le middleware en *nodejs*.
+
+#Le middleware NodeJS
+Dans un premier temps il faut récupérer la configuration par défaut.
+
+Pour ceci, il faut faire la commande suivante :
+```bash
+$ cp node_server/config/index.dist.js node_server/config/index.js
+```
+
+Ensuite vous pouvez lancer le serveur avec la commande suivante :
+```bash
+$ npm start
+# OU utiliser la commande node directement
+$ node node_server/index.js console silly # 'console' pour avoir les logs et 'silly' pour le niveau de logs
+```
+
+## Utiliser docker-compose
+
+Ce projet contient un fichier `docker-compose.yml` pour une utilisation avec
+[docker-compose](https://docs.docker.com/compose/); il utilise le `Dockerfile`
+ fourni à la racine du projet. 
+ Construisez l'image et lancez la avec :
 
 ```bash
-# Run CS checks:
-$ composer cs-check
-# Fix CS errors:
-$ composer cs-fix
-# Run PHPUnit tests:
-$ composer test
+$ docker-compose up -d --build
+```
+
+A ce niveau, vous pouvez visiter http://localhost:8080 pour voir le site fonctionner
+
+Vous pouvez aussi lancer composer depuis l'image. L'environnement du conteneur est nommé
+"oclock_memory", vous passerez donc cette valeur à `docker-compose run`:
+
+```bash
+$ docker-compose run oclock_memory composer install
 ```

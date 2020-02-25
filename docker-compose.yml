@@ -1,4 +1,4 @@
-laminas:
+oclock_memory:
   build: .
   dockerfile: Dockerfile
   ports:
