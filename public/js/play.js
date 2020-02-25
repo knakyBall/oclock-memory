@@ -20,7 +20,7 @@
             setCurrentConfiguration(config);
         });
 
-        //En cas de fin de temps impartit ou fin de partie normale ( toute les cartes retournées )
+        //En cas de fin de temps impartit ou fin de partie normale ( toutes les cartes retournées )
         socket.on('gameFinished', (config) => {
             console.log('%c Jeu terminé ! ', 'background: #222; color: #bada55');
             setCurrentConfiguration(config);

@@ -3,6 +3,7 @@
   "dependencies": {
     "jquery": "^3.4.1",
     "socket.io-client": "^2.3.0",
-    "moment": "^2.24.0"
+    "moment": "^2.24.0",
+    "components-font-awesome": "^5.12.1"
   }
 }

@@ -3,6 +3,15 @@
         <h1>
             L<img src="<?= $this->basePath('img/oclock.png') ?>" style="height: 60px;margin-bottom: 15px;"/>BBY
         </h1>
+        <div class="multi-player-url-container">
+            <h4 class="multi-player-url-label">
+                Url à partager avec ton ami pour joueur à 2 !
+            </h4>
+            <div class="multi-player-url-input-button">
+                <input aria-label="Url à partager avec ton ami pour joueur à plusieurs" type="text" id="multi-player-url-input" readonly aria-disabled="true" class="form-control" value="#" />
+                <button type="button" class="btn btn-primary" onclick="copyFromElement(jQuery(this), 'multi-player-url-input')"><i class="fa fa-copy"></i></button>
+            </div>
+        </div>
         <div class="middle-container">
             <div class="lobby-playerlist"></div>
         </div>

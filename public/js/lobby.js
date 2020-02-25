@@ -1,4 +1,7 @@
 let initialized = false;
+jQuery(document).ready(() => {
+    jQuery('#multi-player-url-input').val(document.location.href);
+});
 const initLobby = lobby_slug => {
     jQuery(document).on('socketReady', () => {
         jQuery('.lobby-playerlist').html(

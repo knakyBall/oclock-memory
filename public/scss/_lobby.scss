@@ -1,3 +1,12 @@
+.multi-player-url-container {
+  .multi-player-url-input-button {
+    display: flex;
+    flex-direction: row;
+    button {
+      margin-left: 20px;
+    }
+  }
+}
 .lobby-playerlist {
   max-width: 80vw;
   overflow: hidden;
@@ -14,12 +23,13 @@
   -moz-box-shadow: $box-shadow;
   box-shadow: $box-shadow;
 
-  padding: 20px;
-
   .creator-row {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #DEDEDE;
+    padding: 20px;
   }
   .pseudoForm {
+    padding: 20px;
     display: flex;
     flex-direction: column;
     flex: 1;

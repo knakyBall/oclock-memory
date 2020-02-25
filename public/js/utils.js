@@ -2,7 +2,7 @@ function getCookie(cname) {
     let name = cname + "=";
     let decodedCookie = decodeURIComponent(document.cookie);
     let ca = decodedCookie.split(';');
-    for(let i = 0; i <ca.length; i++) {
+    for (let i = 0; i < ca.length; i++) {
         let c = ca[i];
         while (c.charAt(0) === ' ') {
             c = c.substring(1);
@@ -14,12 +14,32 @@ function getCookie(cname) {
     return "";
 }
 
-function setCookie(name,value,days) {
+function setCookie(name, value, days) {
     let expires = "";
     if (days) {
         let date = new Date();
-        date.setTime(date.getTime() + (days*24*60*60*1000));
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
         expires = "; expires=" + date.toUTCString();
     }
-    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+    document.cookie = name + "=" + (value || "") + expires + "; path=/";
+}
+
+function copyFromElement($buttonElement, elementID) {
+    /* Récupère le textField */
+    let copyText = document.getElementById(elementID);
+
+    /* Sélectionne le textField */
+    copyText.select();
+    copyText.setSelectionRange(0, 99999); /*Pour les téléphones mobiles*/
+
+    /* Copie le texte du textField */
+    document.execCommand("copy");
+
+    /* Affiche que le texte a été copié */
+    if ($buttonElement.length) {
+        $buttonElement.tooltip({title: "Url Copiée"}).tooltip('show');
+        setTimeout(() => {
+            $buttonElement.tooltip('dispose');
+        }, 2000);
+    }
 }
