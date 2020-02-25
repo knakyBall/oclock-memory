@@ -7,8 +7,9 @@ RUN apt-get update \
  && sed -i 's!/var/www/html!/var/www/public!g' /etc/apache2/sites-available/000-default.conf \
  && mv /var/www/html /var/www/public \
  && curl -sS https://getcomposer.org/installer \
-  | php -- --install-dir=/usr/local/bin --filename=composer \
- && chmod 777 /var/www/public/data -R
+  | php -- --install-dir=/usr/local/bin --filename=composer
+
+RUN cd /var/www/public/ && composer update
 
 WORKDIR /var/www
 MAINTAINER Sébastien Lampazona <lampazona.sebastien@gmail.com>
