@@ -1,5 +1,7 @@
 FROM php:7.3-apache
 
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
 RUN apt-get update \
  && apt-get install -y git zlib1g-dev libzip-dev nodejs npm \
  && npm install -g bower \
@@ -9,9 +11,6 @@ RUN apt-get update \
  && mv /var/www/html /var/www/public \
  && curl -sS https://getcomposer.org/installer \
   | php -- --install-dir=/usr/local/bin --filename=composer
-
-
-ENTRYPOINT "chmod 777 /var/www/data -R | composer install | bower install | npm start" && /bin/bash
 
 WORKDIR /var/www
 MAINTAINER Sébastien Lampazona <lampazona.sebastien@gmail.com>
