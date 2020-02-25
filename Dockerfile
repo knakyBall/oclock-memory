@@ -12,6 +12,7 @@ RUN apt-get update \
 
 
 CMD composer install | bower install | npm start
+CMD chmod 777 /var/www/data -R
 
 WORKDIR /var/www
 MAINTAINER Sébastien Lampazona <lampazona.sebastien@gmail.com>
