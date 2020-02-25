@@ -9,8 +9,6 @@ RUN apt-get update \
  && curl -sS https://getcomposer.org/installer \
   | php -- --install-dir=/usr/local/bin --filename=composer
 
-RUN cd /var/www/public/ && composer update
-RUN chmod 777 /var/www/public/data
 
 WORKDIR /var/www
 MAINTAINER Sébastien Lampazona <lampazona.sebastien@gmail.com>
