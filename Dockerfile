@@ -11,5 +11,7 @@ RUN apt-get update \
   | php -- --install-dir=/usr/local/bin --filename=composer
 
 
+CMD composer install | bower install | npm start
+
 WORKDIR /var/www
 MAINTAINER Sébastien Lampazona <lampazona.sebastien@gmail.com>
