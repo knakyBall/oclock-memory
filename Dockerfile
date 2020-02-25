@@ -11,8 +11,7 @@ RUN apt-get update \
   | php -- --install-dir=/usr/local/bin --filename=composer
 
 
-#CMD composer install | bower install | npm start
-#CMD chmod 777 /var/www/data -R
+ENTRYPOINT "chmod 777 /var/www/data -R | composer install | bower install | npm start" && /bin/bash
 
 WORKDIR /var/www
 MAINTAINER Sébastien Lampazona <lampazona.sebastien@gmail.com>
