@@ -1,7 +1,7 @@
 FROM php:7.3-apache
 
 RUN apt-get update \
- && apt-get install -y git zlib1g-dev libzip-dev nodejs \
+ && apt-get install -y git zlib1g-dev libzip-dev nodejs npm \
  && npm install -g bower \
  && docker-php-ext-install zip \
  && a2enmod rewrite \
