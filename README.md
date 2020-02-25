@@ -81,7 +81,7 @@ Ces commandes vont permettre d'installer toutes les dépendances du client.
 
 **Note:** Il faut ensuite lancer le middleware en *nodejs*.
 
-#Le middleware NodeJS
+# Le middleware NodeJS
 Dans un premier temps il faut récupérer la configuration par défaut.
 
 Pour ceci, il faut faire la commande suivante :
