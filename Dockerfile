@@ -6,9 +6,9 @@ RUN apt-get update \
  && a2enmod rewrite \
  && sed -i 's!/var/www/html!/var/www/public!g' /etc/apache2/sites-available/000-default.conf \
  && mv /var/www/html /var/www/public \
- && chmod 777 /var/www/public/data -R \
  && curl -sS https://getcomposer.org/installer \
-  | php -- --install-dir=/usr/local/bin --filename=composer
+  | php -- --install-dir=/usr/local/bin --filename=composer \
+ && chmod 777 /var/www/public/data -R
 
 WORKDIR /var/www
 MAINTAINER Sébastien Lampazona <lampazona.sebastien@gmail.com>
