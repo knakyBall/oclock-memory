@@ -10,36 +10,36 @@ Projet accessible en test à l'adresse : http://memory.adopteundev.fr
 
 J'ai utilisé `Laminas` ( anciennement zend framework ou zf3 pour les intimes ),
 parce que c'est un framework que je connais bien, et qui m'a permis facilement, 
-de gérer un system de session, de pages et de templating HTML.
+de gérer un système de session, de pages et de templating HTML.
 
-J'ai utilisé `nodeJS`, car j'avais quand même un soucis de "sécurité" vis-à-vis de
+J'ai utilisé `nodeJS`, car j'avais quand même un souci de "sécurité" vis-à-vis de
 la triche. Je ne pouvais pas mettre directement dans le code HTML les noms des paires.
-J'ai donc choisis de les générer sur le serveur, puis coté client de ne mettre que des ids
+J'ai donc choisi de les générer sur le serveur, puis coté client de ne mettre que des ids
 qui serviraient en fait à révéler les cartes qu'à un certain moment, et pour un temps donné.
-De plus, si j'avais fait ca en PHP, j'aurais dû utiliser l'ajax, sauf que l'ajax sur un
-serveur apache et beaucoup moins rapide que du socket.io qui utilise les websockets.
+De plus, si j'avais fait ça en PHP, j'aurais dû utiliser l'ajax, sauf que l'ajax sur un
+serveur apache est beaucoup moins rapide que du socket.io qui utilise les websockets.
 De plus ça m'a permis de faire un système de multijoueurs, qui n'était pas demandé, certes,
 mais je me suis amusé à le faire. Petit bonus !
 
 ## Evolutions potentielles
 
-Si je devais me servir de ce projet comme appuie de cours, il y aurait quelques exercices pratiques pour les
+Si je devais me servir de ce projet comme appui de cours, il y aurait quelques exercices pratiques pour les
 élèves ayant des bases solides, comme, créer un système de bot, où le joueur jouerait donc contre l'algorithme d'un
 élève, avec certaines pénalités sur le bot ( parce que là ... l'homme contre la machine ...) 
 
 Ou des exercices beaucoup plus simples du style, rajouter un compteur "3,2,1 Go !", avant le début d'une partie,
 ou encore ajouter un compteur de paires révélées pour l'ajouter au score, ou un système
-de niveau, avec plus ou moins de carte, dans un temps plus ou moins grand.
+de niveau, avec plus ou moins de cartes, et un délais plus ou moins long.
 
 À savoir que ce projet peut être découpé en plusieurs parties, la partie POO, la partie node avec une grosse partie socket.io, la partie 
-framework PHP ( dans ce cas la laminas mais ça pourrait être symfony ), la partie HTML, la partie SCSS et la 
+framework PHP ( dans ce cas là laminas mais ça pourrait être symfony ), la partie HTML, la partie SCSS et la 
 partie JS Coté client. 
  
-Ce projet, en matière d'appui-cours, pourrait être évolutif du point de vue des élèves,
-par exemple au tout début, le jeu était exclusivement solo. 
-Et je l'ai fait évoluer au fur et à mesure, de façon à pouvoir y rajouter 2 joueurs et plus 
-( maigres le fait que j'ai limité à 2 ).
-Les élèvent créeraient donc un jeu multijoueur en partant d'une page blanche au fur et à mesure des cours.
+Ce projet, en matière d'appui-cours, peut être évolutif du point de vue des élèves,
+par exemple au tout début, le jeu est exclusivement solo. 
+Et je le fais évoluer au fur et à mesure, de façon à pouvoir y rajouter 2 joueurs et plus 
+( malgrès le fait que j'ai limité à 2 ).
+Les élèves créent donc un jeu multijoueur en partant d'une page blanche au fur et à mesure des cours.
 
     
     
@@ -75,8 +75,8 @@ projet et ça devrait être OK pour la suite ! Cela devrait ressembler à quelqu
 
 ### Installation via Nginx
 
-Pour installer via nginx, ouvrez le fichier `/path/to/nginx/nginx.conf` et ajouter un
-[directive d'inclusion](http://nginx.org/en/docs/ngx_core_module.html#include) dans le block `http` si il n'existe pas déjà:
+Pour installer via nginx, ouvrez le fichier `/path/to/nginx/nginx.conf` et ajoutez un
+[directive d'inclusion](http://nginx.org/en/docs/ngx_core_module.html#include) dans le block `http` s'il n'existe pas déjà:
 
 ```nginx
 http {
