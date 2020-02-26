@@ -4,6 +4,8 @@
 
 Ce projet un jeu de type memory dans un contexte de test technique pour O'Clock !
 
+Projet accessible en test à l'adresse : http://memory.adopteundev.fr
+
 #### Pourquoi j'ai fait comme ca ?
 
 J'ai utilisé `Laminas` ( anciennement zend framework ou zf3 pour les intimes ),
