@@ -136,6 +136,8 @@ $ node node_server/index.js console silly # 'console' pour avoir les logs et 'si
 
 ## Utiliser docker-compose
 
+###  ( Attention ne marche que partiellement )
+
 Ce projet contient un fichier `docker-compose.yml` pour une utilisation avec
 [docker-compose](https://docs.docker.com/compose/); il utilise le `Dockerfile`
  fourni à la racine du projet. 
