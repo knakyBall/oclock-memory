@@ -20,6 +20,7 @@ De plus ça m'a permis de faire un système de multijoueurs, qui n'était pas de
 mais je me suis amusé à le faire. Petit bonus !
 
 ##Evolutions potentielles
+
 Si je devais me servir de ce projet comme appuie de cours, il y aurait quelques exercices pratiques pour les
 élèves ayant des bases solides, comme, créer un système de bot, où le joueur jouerait donc contre l'algorithme d'un
 élève, avec certaines pénalités sur le bot ( parce que là ... l'homme contre la machine ...) 
