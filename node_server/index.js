@@ -253,7 +253,7 @@ const bindSocketEvents = function (socket) {
 
     //Demande d'enregistrement du score utilisateur
     socket.on('saveGameScore', (args, cb) => {
-        if (!gamesList[creator-rowsocket.player.getSessionID()]) {
+        if (!gamesList[socket.player.getSessionID()]) {
             return cb({
                 success: false,
                 message: "Aucune session de jeu en cours"
