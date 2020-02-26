@@ -1,3 +1,4 @@
+//Fonction permettant de récupérer la valeur d'un cookie
 function getCookie(cname) {
     let name = cname + "=";
     let decodedCookie = decodeURIComponent(document.cookie);
@@ -14,6 +15,7 @@ function getCookie(cname) {
     return "";
 }
 
+//Fonction permettant de créer/modifier un cookie
 function setCookie(name, value, days) {
     let expires = "";
     if (days) {
@@ -24,6 +26,7 @@ function setCookie(name, value, days) {
     document.cookie = name + "=" + (value || "") + expires + "; path=/";
 }
 
+//Fonction permettant de copier la value d'une textfield dans le presse papier de l'utilisateur
 function copyFromElement($buttonElement, elementID) {
     /* Récupère le textField */
     let copyText = document.getElementById(elementID);

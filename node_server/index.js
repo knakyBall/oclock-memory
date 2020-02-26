@@ -6,6 +6,7 @@ const config = require('./config/index');
 const sequelize = require('./config/sequelize');
 const ScoreModel = require('./Model/Score');
 
+//Authentification à la base de donnée, afin de vérifier l'état de la connexion
 sequelize
     .authenticate()
     .then(() => {
@@ -45,7 +46,7 @@ server.on('error', (e) => {
 
 server.on("connection", (socket) => {
     /** @type Player **/
-        //Initialisation du joueur
+    //Initialisation du joueur
     let player;
 
     //Si le client ne s'est encore jamais connecté
@@ -80,6 +81,7 @@ server.on("connection", (socket) => {
 const bindSocketEvents = function (socket) {
     //Demande de création d'une nouvelle partie
     socket.on('createNewGame', (args) => {
+        //Si une partie en instance de création d'existe pas déjà, alors on la créé
         if (gamesList[socket.player.getSessionID()] === undefined || (gamesList[socket.player.getSessionID()] && gamesList[socket.player.getSessionID()].isStarted())) {
             if (gamesList[socket.player.getSessionID()]){
                 gamesList[socket.player.getSessionID()].stop();
@@ -87,6 +89,7 @@ const bindSocketEvents = function (socket) {
             gamesList[socket.player.getSessionID()] = new Game(server, socket.player);
         }
         socket.player.setPlayingGame(gamesList[socket.player.getSessionID()]);
+        //Puis on notifie l'utilisateur d'aller au lobby de cette partie
         gamesList[socket.player.getSessionID()].goToLobby(socket.player)
     });
 
@@ -157,6 +160,7 @@ const bindSocketEvents = function (socket) {
         gamesList[socket.player.getSessionID()].start();
     });
 
+    //Set le pseudo du joueur sur la partie
     socket.on('setPseudo', ({pseudo}, cb) => {
         try {
             logger.verbose('[setPseudo]', `Changement du pseudo de ${socket.player.getPseudo()} en ${pseudo}`)
@@ -193,6 +197,7 @@ const bindSocketEvents = function (socket) {
             }
         }
     });
+
     //Demande de révéler une carte
     socket.on('compareCard', (args) => {
         try {
@@ -222,11 +227,13 @@ const bindSocketEvents = function (socket) {
         });
     });
 
+    //Permet de récupérer le score en base de données
     socket.on('getScoreBoard', (args, cb) => {
         if (typeof cb !== "function") {
             logger.error('[getScoreBoard]', `Cette fonction ne possède pas de callback `)
             return false;
         }
+        //Récupération des 5 meilleurs temps
         ScoreModel.findAll({
             order: sequelize.literal('TIMEDIFF(finished_at, started_at) ASC'),
             limit: 5
@@ -243,6 +250,7 @@ const bindSocketEvents = function (socket) {
             })
         })
     });
+
     //Demande d'enregistrement du score utilisateur
     socket.on('saveGameScore', (args, cb) => {
         if (!gamesList[creator-rowsocket.player.getSessionID()]) {

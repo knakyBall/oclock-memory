@@ -1,3 +1,5 @@
+//Classe principale de l'application, c'est celle qui représente une partie
+
 const config = require('../config');
 const util = require('util');
 const EventEmitter = require('events').EventEmitter;
@@ -41,6 +43,7 @@ function Game(io, creator, nbCardMax = config.nbCardMaxDefault) {
 
 util.inherits(Game, EventEmitter);
 
+//Fonction permettant d'exporter la configuration de la partie
 Game.prototype.getGameConfig = function () {
     const playersConfig = {};
     Object.keys(this.players).map((playerSessionID) => {
@@ -60,13 +63,9 @@ Game.prototype.getGameConfig = function () {
     };
 };
 
+//Permet de connecter les joueurs au lobby
 Game.prototype.goToLobby = function (player) {
     player.getSocket().emit('goToLobby', {lobby_slug: this.creator.getSessionID()});
-};
-
-Game.prototype.setCreator = function (creator) {
-    this.creator = creator;
-    this.addPlayer(creator);
 };
 
 //Génère une nouvelle configuration de jeu
@@ -77,10 +76,13 @@ Game.prototype.generateNewGameConfiguration = function () {
     logger.debug('[GAME]', `Génération d'une nouvelle configuration de jeu`);
     //Récupération d'un nombre max de cartes
     let availablesCard = [...config.available_fruits].splice(0, Math.round(this.nbCardMax / 2));
+    //Doublage des cartes ( pour avoir obligatoirement des paires)
     let cards_keys = availablesCard.concat(availablesCard);
 
     Object.keys(this.players).map((player_session_id) => {
+        //Mélange des cartes
         cards_keys.sort(() => Math.random() - 0.5);
+        //Ajout et instanciation des cartes dans la partie
         let cards = [];
         cards_keys.map((card_key) => {
             try {
@@ -106,6 +108,7 @@ Game.prototype.getCurrentConfiguration = function () {
             players_cards[player_session_id].push(Card.toObject());
         });
     });
+    //Retourne un export propre de la configuration de la partie
     return {...this.getGameConfig(), players_cards}
 };
 
@@ -117,6 +120,7 @@ Game.prototype.compareCard = function (card_index, player) {
         return false;
     }
 
+    //Permet d'initialiser le tableau
     if (this.comparing_players_cards[player.getSessionID()] === undefined){
         this.comparing_players_cards[player.getSessionID()] = [];
     }
@@ -145,7 +149,9 @@ Game.prototype.compareCard = function (card_index, player) {
                     card: this.players_cards[player.getSessionID()][comparing_card_index].toObject()
                 })
             });
+            //Envoie de l'event au joueur, disant de cacher les cartes du tableau cardsToHide
             this.io.to(this.creator.getSessionID()).emit('hideCards', cardsToHide);
+            //Les cartes étant cachée, plus rien à comparer, donc on vide le tableau de carte à comparer
             this.comparing_players_cards[player.getSessionID()] = [];
         }
         //On ajoute la carte dans le tableau de comparaison
@@ -174,13 +180,15 @@ Game.prototype.compareCard = function (card_index, player) {
                         hasOneHiddenCard = true;
                     }
                 });
+                //Si l'on n'a pas trouvé une seule carte caché, c'est que le joueur à trouver toutes les cartes
+                //Il a donc gagné la partie
                 if (!hasOneHiddenCard) {
                     logger.debug('[GAME]', `${player.getPseudo()} à gagné la partie !`);
                     this.winner = player;
                     this.finish(false);
                 }
             } else {
-                //Démarrage du timeout
+                //S'il y a 2 cartes à comparer mais que ce ne sont pas les mêmes, on les caches au bout d'un certain temps
                 compareCardTimeout = setTimeout(() => {
                     let cardsToHide = [];
                     this.comparing_players_cards[player.getSessionID()].map((comparing_card_index) => {
@@ -190,6 +198,7 @@ Game.prototype.compareCard = function (card_index, player) {
                             card_index: comparing_card_index
                         })
                     });
+                    //Envoie de l'event au joueur, disant de cacher les cartes du tableau cardsToHide
                     this.io.to(this.creator.getSessionID()).emit('hideCards', cardsToHide);
                     this.comparing_players_cards[player.getSessionID()] = [];
                 }, config.revelation_duration);
@@ -262,6 +271,7 @@ Game.prototype.finish = function (time_reached = false) {
     });
 };
 
+//Fonction permettant de sauvegarder le score en BDD
 Game.prototype.saveScore = function () {
     if (this.score_saved){
         return Promise.reject(new Error("Score déjà sauvegardé pour cette session"));
@@ -282,23 +292,21 @@ Game.prototype.saveScore = function () {
         });
 };
 
+//Getter permettant de savoir si la partie est finie ou pas
 Game.prototype.isFinished = function () {
     return this.finished_at !== null;
 };
-
+//Getter permettant de savoir si la partie à commencer
 Game.prototype.isStarted = function () {
     return this.started_at !== null;
 };
 
+//Getter permettant de récupérer le "slug" de la partie, à savoir le session_id du créateur de la partie
 Game.prototype.getSlug = function () {
     return this.creator.getSessionID();
 };
 
-/*************************************/
-/**       Pistes d'amélioration     **/
-/*************************************/
-
-//Ajoute un joueur au tableau
+//Ajout d'un joueur à la partie
 Game.prototype.addPlayer = function (player) {
     if (this.started_at) {
         return false;
@@ -308,20 +316,26 @@ Game.prototype.addPlayer = function (player) {
     }
     this.players[player.getSessionID()] = player;
     this.players[player.getSessionID()].getSocket().join(this.creator.getSessionID());
+    //Envoie à tout le monde qu'un joueur à rejoint ( dans le but d'afficher une notification par exemple )
     this.io.to(this.creator.getSessionID()).emit('playerHasJoined', player.toObject());
+    //Envoie à tout le monde la nouvelle configuration de la partie, avec la liste des joueurs à jour
     this.io.to(this.creator.getSessionID()).emit('setGameConfiguration', this.getCurrentConfiguration());
 };
-//Supprime un joueur du tableau
+
+//Suppression d'un joueur de la partie
 Game.prototype.removePlayer = function (player) {
     if (!this.players[player.getSessionID()] || this.started_at) {
         return false;
     }
     this.players[player.getSessionID()].getSocket().leave(this.creator.getSessionID());
     delete this.players[player.getSessionID()];
+    //Envoie à tout le monde qu'un joueur à quitté ( dans le but d'afficher une notification par exemple )
     this.io.to(this.creator.getSessionID()).emit('playerHasLeaved', player.toObject());
+    //Envoie à tout le monde la nouvelle configuration de la partie, avec la liste des joueurs à jour
     this.io.to(this.creator.getSessionID()).emit('setGameConfiguration', this.getCurrentConfiguration());
 };
 
+//Fonction permettant de savoir si le joueur est le créateur de la partie
 Game.prototype.isCreator = function (player){
     return this.creator.getSessionID() === player.getSessionID();
 };

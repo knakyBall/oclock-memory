@@ -70,6 +70,7 @@ Player.prototype.getSocket = function (){
     return this.socket;
 };
 
+//Permet d'exporter l'objet joueur proprement
 Player.prototype.toObject = function () {
     return {
         socket_id: this.socket_id,
