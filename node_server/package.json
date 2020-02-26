@@ -1,12 +1,11 @@
 {
   "name": "sass",
   "version": "1.0.0",
-  "description": "",
-  "main": "node_server/index.js",
+  "description": "Serveur middleware du jeu Memory O'clock",
+  "main": "index.js",
   "scripts": {
-    "start": "node node_server/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "scss": "node-sass -w \"./public/scss\" -o \"./public/css\" --source-map true --output-style compressed"
+    "start": "node index.js console silly",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",

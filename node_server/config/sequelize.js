@@ -4,6 +4,7 @@ const Sequelize = require('sequelize');
 //Création de la connexion à la base de données
 module.exports = new Sequelize(config.mysql.database, config.mysql.username, config.mysql.password, {
     host: config.mysql.host,
+    port: config.mysql.port,
     dialect: 'mysql',
     pool: {
         max: 5,

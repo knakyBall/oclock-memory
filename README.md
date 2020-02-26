@@ -138,8 +138,6 @@ $ node node_server/index.js console silly # 'console' pour avoir les logs et 'si
 
 ## Utiliser docker-compose
 
-###  ( Attention ne marche que partiellement )
-
 Ce projet contient un fichier `docker-compose.yml` pour une utilisation avec
 [docker-compose](https://docs.docker.com/compose/); il utilise le `Dockerfile`
  fourni à la racine du projet. 
@@ -151,24 +149,15 @@ $ docker-compose up -d --build
 
 A ce niveau, le site est accessible à l'adresse http://localhost:8099
 
-Vous pouvez aussi lancer composer depuis l'image avec la commande `run`.
-
-L'environnement du conteneur est nommé
-"oclock_memory", il faut donc passer cette valeur à `docker-compose run`:
-
-```bash
-$ docker-compose run oclock_memory composer install
-```
-
 
 # Tips
 
 ### Compilation SCSS
 
-Un compilateur de scss est présent dans le projet, il suffit d'executer la commande
+J'utilise le compilateur `node-sass`, pour le lancer il faut éxecuter la commande suivante
 
 ```bash
-$ npm run scss
+$ node-sass -w "./public/scss" -o "./public/css" --source-map true --output-style compressed
 ```
 
 Ce qui va lancer un watcher sur les fichiers dans le dossier `public/scss` 

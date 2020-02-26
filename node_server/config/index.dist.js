@@ -20,15 +20,16 @@ module.exports = {
         'mango',
         'yellow-cherry'
     ],
-    game_duration: 120 * 1000,
+    game_duration: 60 * 1000,
     revelation_duration: 1000,
-    nbCardMaxDefault: 36,
-    nbPlayerMax: 1,
+    nbCardMaxDefault: 16,
+    nbPlayerMax: 2,
 
     mysql: {
-        host: 'localhost',
-        database: 'memory',
-        username: 'root',
-        password: ''
+        host: process.env.MYSQL_HOST || 'localhost',
+        port: process.env.MYSQL_PORT,
+        database: process.env.MYSQL_NAME || 'memory',
+        username: process.env.MYSQL_USER || 'root',
+        password: process.env.MYSQL_PASSWORD || ''
     }
 };

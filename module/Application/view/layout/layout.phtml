@@ -34,7 +34,7 @@
     <?= $this->content ?>
 </div>
 <script type="text/javascript">
-    startSocketIOClient(`${document.location.protocol}//${document.location.hostname}:8081`, '<?= $this->url('lobby', ['lobby_slug' => 'lobbyslug'], ['force_canonical' => true]) ?>', '<?= $this->url('play', [], ['force_canonical' => true]) ?>');
+    startSocketIOClient(`${document.location.protocol}//${"<?= gethostbyname(getenv('NODE_HOST')) ?>" || document.location.hostname}:8081`, '<?= $this->url('lobby', ['lobby_slug' => 'lobbyslug'], ['force_canonical' => true]) ?>', '<?= $this->url('play', [], ['force_canonical' => true]) ?>');
 </script>
 </body>
 </html>

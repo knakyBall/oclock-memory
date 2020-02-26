@@ -11,3 +11,4 @@ node_modules
 public/components/*
 !public/components/.gitkeep
 node_server/config/index.js
+CONTAINER_ALREADY_STARTED_PLACEHOLDER

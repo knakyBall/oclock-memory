@@ -1,7 +1,62 @@
-oclock_memory:
-  build: .
-  dockerfile: Dockerfile
-  ports:
-   - "8099:80"
-  volumes:
-   - .:/var/www
+version: "3.7"
+services:
+  laminas:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8099:80"
+    entrypoint: ["/bin/bash", "/docker-laminas-postinstall.sh"]
+    environment:
+      - NODE_HOST=node
+    volumes:
+      - ./config:/var/www/config
+      - ./data:/var/www/data
+      - ./module:/var/www/module
+      - ./public:/var/www/public
+      - public_component:/var/www/public/component
+      - ./composer.json:/var/www/composer.json
+      - vendor:/var/www/vendor
+      - ./package.json:/var/www/package.json
+      - ./bower.json:/var/www/bower.json
+      - ./.bowerrc:/var/www/.bowerrc
+      - ./docker-laminas-postinstall.sh:/docker-laminas-postinstall.sh
+  database:
+    image: mysql:latest
+    volumes:
+      - ~/mysql:/var/lib/mysql
+      - ./schema.sql:/tmp/1-schema.sql
+    command: mysqld --init-file="/tmp/1-schema.sql"
+    ports:
+      - "3603:3306"
+    expose:
+      - "3306"
+      - "3603"
+    environment:
+      - MYSQL_DATABASE=memory
+      - MYSQL_ROOT_PASSWORD=root
+  node:
+    links:
+      - database
+    depends_on:
+      - database
+    image: "node:latest"
+    working_dir: /home/node/app
+    environment:
+      - NODE_ENV=production
+      - MYSQL_HOST=database
+      - MYSQL_NAME=memory
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root
+      - MYSQL_PORT=3306
+    volumes:
+      - ./node_server:/home/node/app
+      - ./docker-node-postinstall.sh:/docker-node-postinstall.sh
+    entrypoint: ["/bin/bash", "/docker-node-postinstall.sh"]
+    expose:
+      - "8081"
+
+volumes:
+  vendor:
+  public_component:
+  node_server:
