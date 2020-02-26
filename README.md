@@ -144,10 +144,12 @@ Ce projet contient un fichier `docker-compose.yml` pour une utilisation avec
 $ docker-compose up -d --build
 ```
 
-A ce niveau, vous pouvez visiter http://localhost:8080 pour voir le site fonctionner
+A ce niveau, le site est accessible à l'adresse http://localhost:8099
 
-Vous pouvez aussi lancer composer depuis l'image. L'environnement du conteneur est nommé
-"oclock_memory", vous passerez donc cette valeur à `docker-compose run`:
+Vous pouvez aussi lancer composer depuis l'image avec la commande `run`.
+
+L'environnement du conteneur est nommé
+"oclock_memory", il faut donc passer cette valeur à `docker-compose run`:
 
 ```bash
 $ docker-compose run oclock_memory composer install
