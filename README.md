@@ -6,7 +6,7 @@ Ce projet un jeu de type memory dans un contexte de test technique pour O'Clock 
 
 ## Cloner le projet
 ```bash
-$ git clone git@github.com:knakyBall/oclock-memory.git path/to/install
+$ git clone git@github.com:knakyBall/oclock-memory.git /path/to/oclock-memory
 ```
 
 ## Installation du serveur web
@@ -115,3 +115,17 @@ Vous pouvez aussi lancer composer depuis l'image. L'environnement du conteneur e
 ```bash
 $ docker-compose run oclock_memory composer install
 ```
+
+
+# Tips
+
+### Compilation SCSS
+
+Un compilateur de scss est présent dans le projet, il suffit d'executer la commande
+
+```bash
+$ npm run scss
+```
+
+Ce qui va lancer un watcher sur les fichiers dans le dossier `public/scss` 
+et compiler et minifier automatiquement dans le dossier `public/css` 
