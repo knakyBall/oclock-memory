@@ -19,7 +19,7 @@ serveur apache et beaucoup moins rapide que du socket.io qui utilise les websock
 De plus ça m'a permis de faire un système de multijoueurs, qui n'était pas demandé, certes,
 mais je me suis amusé à le faire. Petit bonus !
 
-##Evolutions potentielles
+## Evolutions potentielles
 
 Si je devais me servir de ce projet comme appuie de cours, il y aurait quelques exercices pratiques pour les
 élèves ayant des bases solides, comme, créer un système de bot, où le joueur jouerait donc contre l'algorithme d'un
