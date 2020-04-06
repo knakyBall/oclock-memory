@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js console silly",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "preinstall": "npx npm-force-resolutions"
   },
   "author": "",
   "license": "ISC",
@@ -16,5 +17,11 @@
     "sequelize": "^5.21.5",
     "socket.io": "^2.3.0",
     "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "minimist": "^1.2.5"
+  },
+  "resolutions": {
+    "minimist": "^1.2.5"
   }
 }
